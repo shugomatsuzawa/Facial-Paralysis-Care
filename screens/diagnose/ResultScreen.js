@@ -1,0 +1,171 @@
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import { DataTable, Button } from 'react-native-paper';
+import * as SQLite from 'expo-sqlite';
+
+const DiagnoseResultScreen = ({ route, navigation }) => {
+  const params = route.params
+  // console.log(params);
+  const saveData = () => {
+    const db = SQLite.openDatabase('db');
+    db.transaction((tx) => {
+        // 実行したいSQL
+        tx.executeSql(
+          "SELECT strftime('%m月%d日 %H:%M', strftime('%s','now'), 'unixepoch', 'localtime');",
+          [],
+          (_, resultSet) => {
+            // 成功時のコールバック
+            console.log("TEST success");
+            console.log("TEST result:" + JSON.stringify(resultSet.rows._array));
+          },
+          () => {
+            // 失敗時のコールバック
+            console.log("TEST Failed.");
+            return false;  // return true でロールバックする
+        });
+      },
+      () => { console.log("TEST Failed All."); },
+      () => { console.log("TEST Success All."); }
+    );
+    db.transaction((tx) => {
+        // 実行したいSQL
+        tx.executeSql(
+          "CREATE TABLE IF NOT EXISTS health_data(created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')), ansei INTEGER, hitai INTEGER, karui_heigan INTEGER, tsuyoi_heigan INTEGER, katame INTEGER, biyoku INTEGER, hoho INTEGER, eee INTEGER, kuchibue INTEGER, henoji INTEGER);",
+          null,
+          () => {
+            // 成功時のコールバック
+            console.log("CREATE TABLE Success.");
+          },
+          () => {
+            // 失敗時のコールバック
+            console.log("CREATE TABLE Failed.");
+            return true;  // return true でロールバックする
+        });
+      },
+      () => { console.log("CREATE TABLE Failed All."); },
+      () => { console.log("CREATE TABLE Success All."); }
+    );
+    db.transaction((tx) => {
+        // 実行したいSQL
+        tx.executeSql(
+          "INSERT INTO health_data(ansei, hitai, karui_heigan, tsuyoi_heigan, katame, biyoku, hoho, eee, kuchibue, henoji) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+          [
+            JSON.stringify(params.ansei),
+            JSON.stringify(params.hitai),
+            JSON.stringify(params.karui_heigan),
+            JSON.stringify(params.tsuyoi_heigan),
+            JSON.stringify(params.katame),
+            JSON.stringify(params.biyoku),
+            JSON.stringify(params.hoho),
+            JSON.stringify(params.eee),
+            JSON.stringify(params.kuchibue),
+            JSON.stringify(params.henoji),
+          ],
+          () => {
+            // 成功時のコールバック
+            console.log("INSERT TABLE Success.");
+            navigation.popToTop();
+          },
+          () => {
+            // 失敗時のコールバック
+            console.log("INSERT TABLE Failed.");
+            return true;  // return true でロールバックする
+        });
+      },
+      () => { console.log("INSERT TABLE Failed All."); },
+      () => { console.log("INSERT TABLE Success All."); }
+    );
+    db.transaction((tx) => {
+        // 実行したいSQL
+        tx.executeSql(
+          "SELECT *, rowid FROM health_data;",
+          [],
+          (_, resultSet) => {
+            // 成功時のコールバック
+            console.log("select success");
+            console.log("select result:" + JSON.stringify(resultSet.rows._array));
+          },
+          () => {
+            // 失敗時のコールバック
+            console.log("SELECT TABLE Failed.");
+            return false;  // return true でロールバックする
+        });
+      },
+      () => { console.log("SELECT TABLE Failed All."); },
+      () => { console.log("SELECT TABLE Success All."); }
+    );
+  }
+  return (
+    <View style={styles.container}>
+      <View style={styles.sectionContainer}>
+        <DataTable style={styles.bg_white}>
+          <DataTable.Row>
+            <DataTable.Cell>安静時非対称</DataTable.Cell>
+            <DataTable.Cell numeric>{JSON.stringify(params.ansei)}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>額のしわ寄せ</DataTable.Cell>
+            <DataTable.Cell numeric>{JSON.stringify(params.hitai)}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>軽い閉眼</DataTable.Cell>
+            <DataTable.Cell numeric>{JSON.stringify(params.karui_heigan)}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>強い閉眼</DataTable.Cell>
+            <DataTable.Cell numeric>{JSON.stringify(params.tsuyoi_heigan)}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>片目つぶり</DataTable.Cell>
+            <DataTable.Cell numeric>{JSON.stringify(params.katame)}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>鼻翼を動かす</DataTable.Cell>
+            <DataTable.Cell numeric>{JSON.stringify(params.biyoku)}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>頬を膨らます</DataTable.Cell>
+            <DataTable.Cell numeric>{JSON.stringify(params.hoho)}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>イーと歯を見せる</DataTable.Cell>
+            <DataTable.Cell numeric>{JSON.stringify(params.eee)}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>口笛</DataTable.Cell>
+            <DataTable.Cell numeric>{JSON.stringify(params.kuchibue)}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>口をへの字に曲げる</DataTable.Cell>
+            <DataTable.Cell numeric>{JSON.stringify(params.henoji)}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>合計</DataTable.Cell>
+            <DataTable.Cell numeric></DataTable.Cell>
+          </DataTable.Row>
+        </DataTable>
+        <Button mode="contained" style={styles.inputButton} onPress={saveData}>保存</Button>
+      </View>
+      <StatusBar style="auto" />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  sectionContainer: {
+    marginVertical: 16,
+    marginHorizontal: 16,
+  },
+  bg_white: {
+    backgroundColor: '#fff',
+  },
+  inputButton: {
+    marginTop: 10,
+  },
+});
+
+export default DiagnoseResultScreen;
