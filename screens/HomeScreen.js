@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
 import { DataTable, Card, List, Button } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
@@ -24,6 +24,7 @@ const HomeScreen = ({ navigation }) => {
             () => {
               // 失敗時のコールバック
               console.log("SELECT TABLE Failed.");
+              setItems([]);
               return false;  // return true でロールバックする
           });
         },

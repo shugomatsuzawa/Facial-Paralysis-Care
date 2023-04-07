@@ -1,33 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
-import { DataTable, Button } from 'react-native-paper';
+import React, { useState } from 'react';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
+import { DataTable, Button, Dialog, Portal, Text } from 'react-native-paper';
 import * as SQLite from 'expo-sqlite';
 
 const DiagnoseResultScreen = ({ route, navigation }) => {
   const params = route.params
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
   // console.log(params);
+  const openErrorDialog = () => setIsErrorDialogOpen(true);
+  const closeErrorDialog = () => setIsErrorDialogOpen(false);
   const saveData = () => {
     const db = SQLite.openDatabase('db');
-    db.transaction((tx) => {
-        // 実行したいSQL
-        tx.executeSql(
-          "SELECT strftime('%m月%d日 %H:%M', strftime('%s','now'), 'unixepoch', 'localtime');",
-          [],
-          (_, resultSet) => {
-            // 成功時のコールバック
-            console.log("TEST success");
-            console.log("TEST result:" + JSON.stringify(resultSet.rows._array));
-          },
-          () => {
-            // 失敗時のコールバック
-            console.log("TEST Failed.");
-            return false;  // return true でロールバックする
-        });
-      },
-      () => { console.log("TEST Failed All."); },
-      () => { console.log("TEST Success All."); }
-    );
     db.transaction((tx) => {
         // 実行したいSQL
         tx.executeSql(
@@ -70,30 +54,12 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
           () => {
             // 失敗時のコールバック
             console.log("INSERT TABLE Failed.");
+            openErrorDialog();
             return true;  // return true でロールバックする
         });
       },
       () => { console.log("INSERT TABLE Failed All."); },
       () => { console.log("INSERT TABLE Success All."); }
-    );
-    db.transaction((tx) => {
-        // 実行したいSQL
-        tx.executeSql(
-          "SELECT *, rowid FROM health_data;",
-          [],
-          (_, resultSet) => {
-            // 成功時のコールバック
-            console.log("select success");
-            console.log("select result:" + JSON.stringify(resultSet.rows._array));
-          },
-          () => {
-            // 失敗時のコールバック
-            console.log("SELECT TABLE Failed.");
-            return false;  // return true でロールバックする
-        });
-      },
-      () => { console.log("SELECT TABLE Failed All."); },
-      () => { console.log("SELECT TABLE Success All."); }
     );
   }
   return (
@@ -147,6 +113,18 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
         </DataTable>
         <Button mode="contained" style={styles.inputButton} onPress={saveData}>保存</Button>
       </View>
+      <Portal>
+        <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog}>
+          <Dialog.Icon icon="alert" />
+          <Dialog.Title>エラー</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">問題が発生しました</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={closeErrorDialog}>OK</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
       <StatusBar style="auto" />
     </View>
   );
