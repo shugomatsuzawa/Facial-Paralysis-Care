@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView } from 'react-native';
-import { DataTable, List, Button, Dialog, Portal, Text } from 'react-native-paper';
+import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
+import { useTheme, DataTable, List, Button, Dialog, Portal, Text } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
 
 const DetailScreen = ({ route, navigation }) => {
-  // console.log(props)
+  const theme = useTheme();
   const db = SQLite.openDatabase('db');
   const [items, setItems] = useState([]);
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
@@ -68,9 +68,9 @@ const DetailScreen = ({ route, navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.sectionContainer}>
-        <DataTable style={styles.bg_white}>
+    <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
+      <SafeAreaView style={styles.sectionContainer}>
+        <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
           <DataTable.Row>
             <DataTable.Cell>日付</DataTable.Cell>
             <DataTable.Cell numeric>{items.date}</DataTable.Cell>
@@ -115,18 +115,17 @@ const DetailScreen = ({ route, navigation }) => {
             <DataTable.Cell>口をへの字に曲げる</DataTable.Cell>
             <DataTable.Cell numeric>{items.henoji}</DataTable.Cell>
           </DataTable.Row>
-          <DataTable.Row>
+          <DataTable.Row style={styles.bb0}>
             <DataTable.Cell>合計</DataTable.Cell>
             <DataTable.Cell numeric>{items.sum}</DataTable.Cell>
           </DataTable.Row>
         </DataTable>
-        <List.Section style={styles.bg_white}>
-          <List.Item title="データを削除" titleStyle={styles.labelRed} onPress={deleteData} />
+        <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
+          <List.Item title="データを削除" titleStyle={{color: theme.colors.error}} onPress={deleteData} />
         </List.Section>
-      </View>
+      </SafeAreaView>
       <Portal>
         <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog}>
-          <Dialog.Icon icon="alert" />
           <Dialog.Title>エラー</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">問題が発生しました</Text>
@@ -137,7 +136,7 @@ const DetailScreen = ({ route, navigation }) => {
         </Dialog>
       </Portal>
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -149,11 +148,11 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     marginHorizontal: 16,
   },
-  labelRed: {
-    color: 'red',
+  roundedList: {
+    borderRadius: 10,
   },
-  bg_white: {
-    backgroundColor: '#fff',
+  bb0: {
+    borderBottomWidth: 0,
   },
 });
 

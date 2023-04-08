@@ -69,14 +69,14 @@ const Diagnose07Screen = ({ route, navigation }) => {
         )}
         <IconButton icon={isCameraOpen ? 'close' : 'camera'} mode={isCameraOpen ? 'contained-tonal' : 'contained'} style={styles.cameraButton} onPress={openCamera} />
       </View>
-      <View style={styles.sectionContainer}>
+      <SafeAreaView style={styles.sectionContainer}>
         <Text variant="displayLarge">07<Text variant="labelMedium"> / 10</Text></Text>
         <Text variant="bodyMedium">動かしずらい方の頬を膨らませる時、空気は漏れますか？</Text>
         <Text variant="bodyMedium">反対側の頬も膨らませられますか？</Text>
         <Button mode="contained" style={styles.inputButton} onPress={() => addParams(4)}>動く</Button>
         <Button mode="contained" style={styles.inputButton} onPress={() => addParams(2)}>少し動く</Button>
         <Button mode="contained" style={styles.inputButton} onPress={() => addParams(0)}>動かない</Button>
-      </View>
+      </SafeAreaView>
       <StatusBar style="auto" />
     </View>
   );

@@ -6,10 +6,10 @@ import { Text, Button } from 'react-native-paper';
 const DiagnoseResultScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.sectionContainer}>
+      <SafeAreaView style={styles.sectionContainer}>
         <Text variant="headlineMedium">お疲れ様でした</Text>
         <Button mode="contained-tonal" style={styles.inputButton} onPress={() => navigation.popToTop()}>完了</Button>
-      </View>
+      </SafeAreaView>
       <StatusBar style="auto" />
     </View>
   );

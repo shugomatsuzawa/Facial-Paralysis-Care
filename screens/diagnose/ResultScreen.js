@@ -1,13 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView } from 'react-native';
-import { DataTable, Button, Dialog, Portal, Text } from 'react-native-paper';
+import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
+import { useTheme, DataTable, Button, Dialog, Portal, Text } from 'react-native-paper';
 import * as SQLite from 'expo-sqlite';
 
 const DiagnoseResultScreen = ({ route, navigation }) => {
+  const theme = useTheme();
   const params = route.params
-  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
   // console.log(params);
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
   const openErrorDialog = () => setIsErrorDialogOpen(true);
   const closeErrorDialog = () => setIsErrorDialogOpen(false);
   const saveData = () => {
@@ -63,9 +64,9 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
     );
   }
   return (
-    <View style={styles.container}>
-      <View style={styles.sectionContainer}>
-        <DataTable style={styles.bg_white}>
+    <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
+      <SafeAreaView style={styles.sectionContainer}>
+        <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
           <DataTable.Row>
             <DataTable.Cell>安静時非対称</DataTable.Cell>
             <DataTable.Cell numeric>{JSON.stringify(params.ansei)}</DataTable.Cell>
@@ -106,16 +107,15 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
             <DataTable.Cell>口をへの字に曲げる</DataTable.Cell>
             <DataTable.Cell numeric>{JSON.stringify(params.henoji)}</DataTable.Cell>
           </DataTable.Row>
-          <DataTable.Row>
+          <DataTable.Row style={styles.bb0}>
             <DataTable.Cell>合計</DataTable.Cell>
             <DataTable.Cell numeric></DataTable.Cell>
           </DataTable.Row>
         </DataTable>
         <Button mode="contained" style={styles.inputButton} onPress={saveData}>保存</Button>
-      </View>
+      </SafeAreaView>
       <Portal>
         <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog}>
-          <Dialog.Icon icon="alert" />
           <Dialog.Title>エラー</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">問題が発生しました</Text>
@@ -126,7 +126,7 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
         </Dialog>
       </Portal>
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -138,11 +138,14 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     marginHorizontal: 16,
   },
-  bg_white: {
-    backgroundColor: '#fff',
+  roundedList: {
+    borderRadius: 10,
   },
   inputButton: {
     marginTop: 10,
+  },
+  bb0: {
+    borderBottomWidth: 0,
   },
 });
 

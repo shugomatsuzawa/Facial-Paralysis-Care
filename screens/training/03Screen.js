@@ -66,11 +66,11 @@ const Training03Screen = ({ navigation }) => {
         )}
         <IconButton icon={isCameraOpen ? 'close' : 'camera'} mode={isCameraOpen ? 'contained-tonal' : 'contained'} style={styles.cameraButton} onPress={openCamera} />
       </View>
-      <View style={styles.sectionContainer}>
+      <SafeAreaView style={styles.sectionContainer}>
         <Text variant="displayLarge">03<Text variant="labelMedium"> / 10</Text></Text>
         <Text variant="bodyMedium">軽く目をつぶってみてください。</Text>
         <Button mode="contained-tonal" style={styles.inputButton} onPress={addParams}>次へ</Button>
-      </View>
+      </SafeAreaView>
       <StatusBar style="auto" />
     </View>
   );

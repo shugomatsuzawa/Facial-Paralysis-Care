@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView } from 'react-native';
-import { DataTable, List, Button, Dialog, Portal, Text } from 'react-native-paper';
+import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
+import { useTheme, DataTable, List, Button, Dialog, Portal, Text } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
 
 const DataScreen = ({ navigation }) => {
-  // console.log(props)
+  const theme = useTheme();
   const db = SQLite.openDatabase('db');
   const [items, setItems] = useState([]);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -57,38 +57,36 @@ const DataScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.sectionContainer}>
-        <DataTable style={styles.bg_white}>
+    <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
+      <SafeAreaView style={styles.sectionContainer}>
+        <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
           {items.map((item, index) => (
-            <DataTable.Row key={item.id} onPress={() => navigation.navigate('DataDetail',{ id: item.id, })}>
+            <DataTable.Row key={item.id} onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={index === items.length - 1 ? styles.bb0 : ''}>
               <DataTable.Cell>{item.score}</DataTable.Cell>
               <DataTable.Cell numeric>{item.date}</DataTable.Cell>
             </DataTable.Row>
           ))}
         </DataTable>
-        <List.Section style={styles.bg_white}>
-          {/* <List.Item title="インポート" titleStyle={styles.labelBlue} /> */}
-          {/* <List.Item title="エクスポート" titleStyle={items.length ? styles.labelBlue : styles.labelDisabled } /> */}
-          <List.Item title="全てのデータを削除" titleStyle={items.length ? styles.labelRed : styles.labelDisabled } onPress={items.length ? openDeleteDialog : ""} />
+        <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
+          {/* <List.Item title="インポート" titleStyle={{color: theme.colors.primary}} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} /> */}
+          {/* <List.Item title="エクスポート" titleStyle={items.length ? {color: theme.colors.primary} : {color: theme.colors.labelDisabled}} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} /> */}
+          <List.Item title="全てのデータを削除" titleStyle={items.length ? {color: theme.colors.error} : {color: theme.colors.labelDisabled}} onPress={items.length ? openDeleteDialog : ""} />
         </List.Section>
-      </View>
+      </SafeAreaView>
       <Portal>
         <Dialog visible={isDeleteDialogOpen} onDismiss={closeDeleteDialog}>
-          <Dialog.Icon icon="alert" />
           <Dialog.Title>全てのデータを削除します</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">変更は元には戻せません。よろしいですか？</Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button textColor="red" onPress={deleteDatabase}>削除</Button>
+            <Button textColor={theme.colors.error} onPress={deleteDatabase}>削除</Button>
             <Button onPress={closeDeleteDialog}>キャンセル</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
       <Portal>
         <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog}>
-          <Dialog.Icon icon="alert" />
           <Dialog.Title>エラー</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">問題が発生しました</Text>
@@ -99,7 +97,7 @@ const DataScreen = ({ navigation }) => {
         </Dialog>
       </Portal>
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -111,17 +109,14 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     marginHorizontal: 16,
   },
-  labelRed: {
-    color: 'red',
+  roundedList: {
+    borderRadius: 10,
   },
-  labelBlue: {
-    color: 'blue',
+  bb0: {
+    borderBottomWidth: 0,
   },
-  labelDisabled: {
-    color: 'gray',
-  },
-  bg_white: {
-    backgroundColor: '#fff',
+  bb1: {
+    borderBottomWidth: 1,
   },
 });
 

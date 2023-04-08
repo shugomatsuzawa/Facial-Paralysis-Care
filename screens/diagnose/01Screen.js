@@ -66,13 +66,13 @@ const Diagnose01Screen = ({ navigation }) => {
         )}
         <IconButton icon={isCameraOpen ? 'close' : 'camera'} mode={isCameraOpen ? 'contained-tonal' : 'contained'} style={styles.cameraButton} onPress={openCamera} />
       </View>
-      <View style={styles.sectionContainer}>
+      <SafeAreaView style={styles.sectionContainer}>
         <Text variant="displayLarge">01<Text variant="labelMedium"> / 10</Text></Text>
         <Text variant="bodyMedium">まず、顔を動かさない状態で左右対称になっているかを確認します。</Text>
         <Button mode="contained" style={styles.inputButton} onPress={() => addParams(4)}>ほぼ正常</Button>
         <Button mode="contained" style={styles.inputButton} onPress={() => addParams(2)}>少し非対称</Button>
         <Button mode="contained" style={styles.inputButton} onPress={() => addParams(0)}>かなり非対称</Button>
-      </View>
+      </SafeAreaView>
       <StatusBar style="auto" />
     </View>
   );

@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView } from 'react-native';
-import { DataTable, Card, List, Button } from 'react-native-paper';
+import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
+import { useTheme, DataTable, Card, List, Button, Text } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
 
 const HomeScreen = ({ navigation }) => {
-  // console.log(props)
+  const theme = useTheme();
   const db = SQLite.openDatabase('db');
   const [items, setItems] = useState([]);
   useFocusEffect(
@@ -34,37 +34,57 @@ const HomeScreen = ({ navigation }) => {
     }, [])
   );
   return (
-    <View style={styles.container}>
-      <DataTable style={styles.bg_white}>
-        {items.map((item, index) => (
-          <DataTable.Row key={item.id}>
-            <DataTable.Cell>{item.score}</DataTable.Cell>
-            <DataTable.Cell numeric>{item.date}</DataTable.Cell>
-          </DataTable.Row>
-        ))}
-      </DataTable>
-      <List.Section style={styles.bg_white}>
-        <List.Item title="全てのデータを表示" onPress={() => navigation.navigate('Data')} right={() => <List.Icon icon="chevron-right" />} />
-        <List.Item title="今日のテスト" onPress={() => navigation.navigate('Diagnose01')} right={() => <List.Icon icon="chevron-right" />} />
-        <List.Item title="今日のトレーニング（記録なし）" onPress={() => navigation.navigate('Training01')} right={() => <List.Icon icon="chevron-right" />} />
-        <List.Item title="病気について" onPress={() => navigation.navigate('About')} right={() => <List.Icon icon="chevron-right" />} />
-      </List.Section>
+    <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
+      <SafeAreaView style={{backgroundColor: theme.colors.surface}}>
+        <DataTable>
+          {items.map((item, index) => (
+            <DataTable.Row key={item.id}>
+              <DataTable.Cell>{item.score}</DataTable.Cell>
+              <DataTable.Cell numeric>{item.date}</DataTable.Cell>
+            </DataTable.Row>
+          ))}
+        </DataTable>
+        <List.Section>
+          <List.Item title="全てのデータを表示" onPress={() => navigation.navigate('Data')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceVariant} />} />
+        </List.Section>
+      </SafeAreaView>
+      <SafeAreaView style={styles.sectionContainer}>
+        <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
+          <List.Item title="今日のテスト" onPress={() => navigation.navigate('Diagnose01')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceVariant} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
+          <List.Item title="今日のトレーニング（記録なし）" onPress={() => navigation.navigate('Training01')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceVariant} />} />
+        </List.Section>
+        <Card onPress={() => navigation.navigate('About')} style={styles.mt10}>
+          <Card.Cover source={{ uri: 'https://source.unsplash.com/random/640x480/?healing' }} style={styles.cardCover} />
+          <Card.Content style={styles.mt10}>
+            <Text variant="titleLarge">病気について</Text>
+            <Text variant="bodyMedium">顔面神経麻痺について学びます。</Text>
+          </Card.Content>
+        </Card>
+      </SafeAreaView>
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
+  },
+  sectionContainer: {
     marginVertical: 16,
     marginHorizontal: 16,
   },
-  bg_white: {
-    backgroundColor: '#fff',
+  roundedList: {
+    borderRadius: 10,
+  },
+  cardCover: {
+    margin: 6,
+  },
+  mt10: {
+    marginTop: 10,
+  },
+  bb1: {
+    borderBottomWidth: 1,
   },
 });
 
