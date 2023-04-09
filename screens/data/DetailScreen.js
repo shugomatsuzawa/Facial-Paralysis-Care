@@ -18,11 +18,10 @@ const DetailScreen = ({ route, navigation }) => {
           // 実行したいSQL
           tx.executeSql(
             "SELECT rowid AS id, strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date, ansei, hitai, karui_heigan, tsuyoi_heigan, katame, biyoku, hoho, eee, kuchibue, henoji, ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS sum FROM health_data WHERE rowid = ?;",
-            [
-              JSON.stringify(params.id),
-            ],
+            [params.id],
             (_, resultSet) => {
               // 成功時のコールバック
+              console.log("SELECT TABLE Success.");
               // console.log("select result:" + JSON.stringify(resultSet.rows._array[0]));
               setItems(resultSet.rows._array[0]);
             },
@@ -47,9 +46,7 @@ const DetailScreen = ({ route, navigation }) => {
         // 実行したいSQL
         tx.executeSql(
           "DELETE FROM health_data WHERE rowid = ?;",
-          [
-            JSON.stringify(params.id),
-          ],
+          [params.id],
           () => {
             // 成功時のコールバック
             console.log("DELETE success");
@@ -62,8 +59,8 @@ const DetailScreen = ({ route, navigation }) => {
             return true;  // return true でロールバックする
         });
       },
-      () => { console.log("DELETE Failed All."); },
-      () => { console.log("DELETE Success All."); }
+      () => { console.log("deleteData Failed All."); },
+      () => { console.log("deleteData Success All."); }
     );
   }
 

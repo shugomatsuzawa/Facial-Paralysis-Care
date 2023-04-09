@@ -9,22 +9,24 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "rgb(242, 244, 245)"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.shugomatsuzawa",
+      "buildNumber": "1.0.0b"
     },
     "android": {
+      "package": "com.shugomatsuzawa",
+      "versionCode": 1,
+      "permissions": ["CAMERA"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }

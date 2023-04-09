@@ -17,6 +17,7 @@ import Diagnose08Screen from './screens/diagnose/08Screen';
 import Diagnose09Screen from './screens/diagnose/09Screen';
 import Diagnose10Screen from './screens/diagnose/10Screen';
 import DiagnoseResultScreen from './screens/diagnose/ResultScreen';
+import DiagnoseCongratulationScreen from './screens/diagnose/CongratulationScreen';
 import Training01Screen from './screens/training/01Screen';
 import Training02Screen from './screens/training/02Screen';
 import Training03Screen from './screens/training/03Screen';
@@ -149,6 +150,7 @@ export default function App() {
           <Stack.Screen name="Diagnose09" component={Diagnose09Screen} options={{ title: '口笛' }} />
           <Stack.Screen name="Diagnose10" component={Diagnose10Screen} options={{ title: '口をへの字に曲げる' }} />
           <Stack.Screen name="DiagnoseResult" component={DiagnoseResultScreen} options={{ title: '結果' }} />
+          <Stack.Screen name="DiagnoseCongratulation" component={DiagnoseCongratulationScreen} options={{ title: 'おめでとう', headerShown: false, gestureEnabled: false }} />
           <Stack.Screen name="Training01" component={Training01Screen} options={{ title: '安静時非対称' }} />
           <Stack.Screen name="Training02" component={Training02Screen} options={{ title: '額のしわ寄せ' }} />
           <Stack.Screen name="Training03" component={Training03Screen} options={{ title: '軽い閉眼' }} />
@@ -159,7 +161,7 @@ export default function App() {
           <Stack.Screen name="Training08" component={Training08Screen} options={{ title: 'イーと歯を見せる' }} />
           <Stack.Screen name="Training09" component={Training09Screen} options={{ title: '口笛' }} />
           <Stack.Screen name="Training10" component={Training10Screen} options={{ title: '口をへの字に曲げる' }} />
-          <Stack.Screen name="TrainingComplete" component={TrainingCompleteScreen} options={{ title: '完了' }} />
+          <Stack.Screen name="TrainingComplete" component={TrainingCompleteScreen} options={{ title: '完了', headerBackVisible: false, gestureEnabled: false }} />
           <Stack.Screen name="Data" component={DataScreen} options={{ title: '全ての記録データ' }} />
           <Stack.Screen name="DataDetail" component={DataDetailScreen} options={{ title: '詳細' }} />
         </Stack.Navigator>

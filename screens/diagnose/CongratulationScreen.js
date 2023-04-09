@@ -2,15 +2,23 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View, SafeAreaView, Image } from 'react-native';
 import { Text, Button } from 'react-native-paper';
-import CompleteImage from '../../components/CompleteImage';
+import PerfectImage from '../../components/PerfectImage';
+import YouDidItImage from '../../components/YouDidItImage';
 
-const TrainingCompleteScreen = ({ navigation }) => {
+const DiagnoseCongratulationScreen = ({ route, navigation }) => {
+  const isFirst = route.params.isFirst;
+  console.log(isFirst);
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.sectionContainer}>
-        <CompleteImage style={styles.completeImage} />
-        <Text variant="headlineMedium">お疲れ様でした</Text>
-        <Text variant="bodyMedium" style={styles.mt10}>この調子でいきましょう。</Text>
+        {isFirst == 40 ? (
+          <PerfectImage style={styles.completeImage} />
+        ) : isFirst == 20 ? (
+          <YouDidItImage style={styles.completeImage} />
+        ) : ''}
+        <Text variant="headlineMedium">やりました！</Text>
+        <Text variant="bodyMedium" style={styles.mt10}>初めて{isFirst == 40 ? '40点満点を' : isFirst == 20 ? '20点以上を' : ''}獲得しました。</Text>
         <Button mode="contained-tonal" style={styles.mt10} onPress={() => navigation.popToTop()}>完了</Button>
       </SafeAreaView>
       <StatusBar style="auto" />
@@ -38,4 +46,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TrainingCompleteScreen;
+export default DiagnoseCongratulationScreen;

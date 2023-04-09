@@ -21,6 +21,7 @@ const DataScreen = ({ navigation }) => {
             [],
             (_, resultSet) => {
               // 成功時のコールバック
+              console.log("SELECT TABLE Success.");
               // console.log("select result:" + JSON.stringify(resultSet.rows._array));
               setItems(resultSet.rows._array);
             },

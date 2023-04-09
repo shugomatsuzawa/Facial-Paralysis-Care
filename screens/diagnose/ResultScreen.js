@@ -11,6 +11,21 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
   const openErrorDialog = () => setIsErrorDialogOpen(true);
   const closeErrorDialog = () => setIsErrorDialogOpen(false);
+
+  const paramsArray = [
+    params.ansei,
+    params.hitai,
+    params.karui_heigan,
+    params.tsuyoi_heigan,
+    params.katame,
+    params.biyoku,
+    params.hoho,
+    params.eee,
+    params.kuchibue,
+    params.henoji,
+  ];
+  const paramsSum = paramsArray.reduce((accumulator, current) => accumulator + current);
+
   const saveData = () => {
     const db = SQLite.openDatabase('db');
     db.transaction((tx) => {
@@ -27,30 +42,47 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
             console.log("CREATE TABLE Failed.");
             return true;  // return true でロールバックする
         });
-      },
-      () => { console.log("CREATE TABLE Failed All."); },
-      () => { console.log("CREATE TABLE Success All."); }
-    );
-    db.transaction((tx) => {
-        // 実行したいSQL
+
         tx.executeSql(
           "INSERT INTO health_data(ansei, hitai, karui_heigan, tsuyoi_heigan, katame, biyoku, hoho, eee, kuchibue, henoji) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-          [
-            JSON.stringify(params.ansei),
-            JSON.stringify(params.hitai),
-            JSON.stringify(params.karui_heigan),
-            JSON.stringify(params.tsuyoi_heigan),
-            JSON.stringify(params.katame),
-            JSON.stringify(params.biyoku),
-            JSON.stringify(params.hoho),
-            JSON.stringify(params.eee),
-            JSON.stringify(params.kuchibue),
-            JSON.stringify(params.henoji),
-          ],
+          paramsArray,
           () => {
-            // 成功時のコールバック
             console.log("INSERT TABLE Success.");
-            navigation.popToTop();
+            if (paramsSum >= 20) {
+              db.transaction((tx) => {
+                  tx.executeSql(
+                    "SELECT (SELECT COUNT(rowid) FROM health_data LIMIT 2) AS has_data, (SELECT COUNT(rowid) FROM health_data WHERE ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji >= 40 LIMIT 2) AS has_40, (SELECT COUNT(rowid) FROM health_data WHERE ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji >= 20 LIMIT 2) AS has_20;",
+                    [],
+                    (_, resultSet) => {
+                      // 成功時のコールバック
+                      // console.log("resultSet:" + JSON.stringify(resultSet.rows._array));
+                      const hasData = resultSet.rows._array[0].has_data;
+                      const has40 = resultSet.rows._array[0].has_40;
+                      const has20 = resultSet.rows._array[0].has_20;
+                      console.log("SELECT TABLE Success. (hasData:" + hasData + ", has40:" + has40 + ", has20:" + has20 + ")");
+                      if (hasData > 1 && has40 <= 1 && paramsSum >= 40) {
+                        navigation.navigate('DiagnoseCongratulation', { isFirst: '40' });
+                      } else if (hasData > 1 && has20 <= 1 && paramsSum >= 20) {
+                        console.log("Is First 20");
+                        navigation.navigate('DiagnoseCongratulation', { isFirst: '20' });
+                      } else {
+                        console.log("Is Else");
+                        navigation.popToTop();
+                      }
+                    },
+                    () => {
+                      // 失敗時のコールバック
+                      console.log("SELECT TABLE Failed.");
+                      return false;  // return true でロールバックする
+                  });
+                },
+                () => { console.log("SELECT TABLE Failed All."); },
+                () => { console.log("SELECT TABLE Success All."); }
+              );
+            } else {
+              console.log("Is Not paramsSum >= 20");
+              navigation.popToTop();
+            }
           },
           () => {
             // 失敗時のコールバック
@@ -59,10 +91,11 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
             return true;  // return true でロールバックする
         });
       },
-      () => { console.log("INSERT TABLE Failed All."); },
-      () => { console.log("INSERT TABLE Success All."); }
+      () => { console.log("saveData Failed All."); },
+      () => { console.log("saveData Success All."); }
     );
-  }
+  };
+
   return (
     <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
       <SafeAreaView style={styles.sectionContainer}>
@@ -109,7 +142,7 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
           </DataTable.Row>
           <DataTable.Row style={styles.bb0}>
             <DataTable.Cell>合計</DataTable.Cell>
-            <DataTable.Cell numeric></DataTable.Cell>
+            <DataTable.Cell numeric>{paramsSum} / 40</DataTable.Cell>
           </DataTable.Row>
         </DataTable>
         <Button mode="contained" style={styles.inputButton} onPress={saveData}>保存</Button>
