@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "rgb(242, 244, 245)"
+      "backgroundColor": "#f2f4f5"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -25,7 +25,7 @@
       "permissions": ["CAMERA"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#f2f4f5"
       }
     }
   }

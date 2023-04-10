@@ -1,16 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View, SafeAreaView, Image } from 'react-native';
-import { Text, Button } from 'react-native-paper';
+import { useTheme, Text, Button } from 'react-native-paper';
 import PerfectImage from '../../components/PerfectImage';
 import YouDidItImage from '../../components/YouDidItImage';
 
 const DiagnoseCongratulationScreen = ({ route, navigation }) => {
+  const theme = useTheme();
   const isFirst = route.params.isFirst;
   console.log(isFirst);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.colors.surface}]}>
       <SafeAreaView style={styles.sectionContainer}>
         {isFirst == 40 ? (
           <PerfectImage style={styles.completeImage} />

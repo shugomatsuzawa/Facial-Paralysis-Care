@@ -1,7 +1,7 @@
 import React from 'react';
 import { useColorScheme } from 'react-native';
-import { MD3LightTheme, MD3DarkTheme, Provider as PaperProvider } from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
+import { MD3LightTheme, MD3DarkTheme, adaptNavigationTheme, Provider as PaperProvider } from 'react-native-paper';
+import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme, } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import HomeScreen from './screens/HomeScreen';
@@ -37,14 +37,23 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const colorScheme = useColorScheme();
   console.log(colorScheme);
+  const { LightTheme, DarkTheme } = adaptNavigationTheme({
+    reactNavigationLight: NavigationDefaultTheme,
+    reactNavigationDark: NavigationDarkTheme,
+  });
+  // console.log(LightTheme.colors);
+  // console.log(DarkTheme.colors);
   const theme = colorScheme === 'dark' ? {
     ...MD3DarkTheme,
+    ...DarkTheme,
     // Specify custom property
     myOwnProperty: true,
     // Specify custom property in nested object
     colors: {
-      "primary": "#80B2A9",
-      "onPrimary": "#051320",
+      ...MD3DarkTheme.colors,
+      ...DarkTheme.colors,
+      "primary": "rgb(128, 178, 169)",
+      "onPrimary": "rgb(5, 19, 32)",
       "primaryContainer": "rgb(0, 78, 90)",
       "onPrimaryContainer": "rgb(164, 238, 255)",
       "secondary": "rgb(178, 203, 209)",
@@ -59,7 +68,7 @@ export default function App() {
       "onError": "rgb(105, 0, 5)",
       "errorContainer": "rgb(147, 0, 10)",
       "onErrorContainer": "rgb(255, 180, 171)",
-      "background": "#000000",
+      "background": "rgb(0, 0, 0)",
       "onBackground": "rgb(225, 227, 227)",
       "surface": "rgb(25, 28, 29)",
       "onSurface": "rgb(225, 227, 227)",
@@ -82,14 +91,22 @@ export default function App() {
       },
       "surfaceDisabled": "rgba(225, 227, 227, 0.12)",
       "onSurfaceDisabled": "rgba(225, 227, 227, 0.38)",
-      "backdrop": "rgba(41, 50, 52, 0.4)"
+      "backdrop": "rgba(41, 50, 52, 0.4)",
+
+      "border": "rgb(137, 146, 149)",
+      "card": "rgb(0, 0, 0)",
+      "notification": "rgb(255, 180, 171)",
+      "text": "rgb(225, 227, 227)",
     },
   } : {
     ...MD3LightTheme,
+    ...LightTheme,
     // Specify custom property
     myOwnProperty: true,
     // Specify custom property in nested object
     colors: {
+      ...MD3LightTheme.colors,
+      ...LightTheme.colors,
       "primary": "rgb(0, 104, 119)",
       "onPrimary": "rgb(255, 255, 255)",
       "primaryContainer": "rgb(164, 238, 255)",
@@ -108,7 +125,7 @@ export default function App() {
       "onErrorContainer": "rgb(65, 0, 2)",
       "background": "rgb(242, 244, 245)",
       "onBackground": "rgb(25, 28, 29)",
-      "surface": "#FFFFFF",
+      "surface": "rgb(255, 255, 255)",
       "onSurface": "rgb(25, 28, 29)",
       "surfaceVariant": "rgb(219, 228, 231)",
       "onSurfaceVariant": "rgb(63, 72, 75)",
@@ -129,7 +146,12 @@ export default function App() {
       },
       "surfaceDisabled": "rgba(25, 28, 29, 0.12)",
       "onSurfaceDisabled": "rgba(25, 28, 29, 0.38)",
-      "backdrop": "rgba(41, 50, 52, 0.4)"
+      "backdrop": "rgba(41, 50, 52, 0.4)",
+
+      "border": "rgb(111, 121, 123)",
+      "card": "rgb(242, 244, 245)",
+      "notification": "rgb(186, 26, 26)",
+      "text": "rgb(25, 28, 29)",
     },
   };
 

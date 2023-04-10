@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useRef } from 'react';
 import { StyleSheet, View, SafeAreaView, Image, Pressable } from 'react-native';
-import { Button, IconButton, Text } from 'react-native-paper';
+import { useTheme,Button, IconButton, Text } from 'react-native-paper';
 import { Camera, CameraType } from 'expo-camera';
 
 const Diagnose04Screen = ({ route, navigation }) => {
+  const theme = useTheme();
   // console.log(route);
   const [hasPermission, setHasPermission] = useState(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -69,12 +70,19 @@ const Diagnose04Screen = ({ route, navigation }) => {
         )}
         <IconButton icon={isCameraOpen ? 'close' : 'camera'} mode={isCameraOpen ? 'contained-tonal' : 'contained'} style={styles.cameraButton} onPress={openCamera} />
       </View>
-      <SafeAreaView style={styles.sectionContainer}>
-        <Text variant="displayLarge">04<Text variant="labelMedium"> / 10</Text></Text>
-        <Text variant="bodyMedium">ぎゅっと強く目をつぶってみてください。</Text>
-        <Button mode="contained" style={styles.inputButton} onPress={() => addParams(4)}>動く</Button>
-        <Button mode="contained" style={styles.inputButton} onPress={() => addParams(2)}>少し動く</Button>
-        <Button mode="contained" style={styles.inputButton} onPress={() => addParams(0)}>動かない</Button>
+      <SafeAreaView style={styles.inputContainer}>
+        <View>
+          <View style={styles.progress}>
+            <Text variant="displayLarge" style={{color: theme.colors.primary}}>04</Text>
+            <Text variant="labelMedium" style={{color: theme.colors.secondary}}> / 10</Text>
+          </View>
+          <Text variant="bodyMedium">ぎゅっと強く目をつぶってみてください。</Text>
+        </View>
+        <View>
+          <Button mode="contained" style={styles.inputButton} onPress={() => addParams(4)}>動く</Button>
+          <Button mode="contained" style={styles.inputButton} onPress={() => addParams(2)}>少し動く</Button>
+          <Button mode="contained" style={styles.inputButton} onPress={() => addParams(0)}>動かない</Button>
+        </View>
       </SafeAreaView>
       <StatusBar style="auto" />
     </View>
@@ -86,13 +94,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cameraContainer: {
-    height: '50%',
+    flex: 1,
     backgroundColor: '#fff',
     position: 'relative',
   },
-  sectionContainer: {
+  inputContainer: {
+    height: 320,
     marginVertical: 16,
     marginHorizontal: 16,
+    justifyContent: 'space-between',
   },
 
   cameraButton: {
@@ -125,8 +135,12 @@ const styles = StyleSheet.create({
     objectFit: 'contain',
   },
 
+  progress: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
   inputButton: {
-    marginTop: 10,
+    marginBottom: 10,
   },
 });
 

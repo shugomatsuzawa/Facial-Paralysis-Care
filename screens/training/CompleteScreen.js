@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View, SafeAreaView, Image } from 'react-native';
-import { Text, Button } from 'react-native-paper';
+import { useTheme, Text, Button } from 'react-native-paper';
 import CompleteImage from '../../components/CompleteImage';
 
 const TrainingCompleteScreen = ({ navigation }) => {
+  const theme = useTheme();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.colors.surface}]}>
       <SafeAreaView style={styles.sectionContainer}>
         <CompleteImage style={styles.completeImage} />
         <Text variant="headlineMedium">お疲れ様でした</Text>

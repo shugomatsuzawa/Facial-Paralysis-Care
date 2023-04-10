@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useRef } from 'react';
 import { StyleSheet, View, SafeAreaView, Image, Pressable } from 'react-native';
-import { Button, IconButton, Text } from 'react-native-paper';
+import { useTheme, Button, IconButton, Text } from 'react-native-paper';
 import { Camera, CameraType } from 'expo-camera';
 
 const Training05Screen = ({ navigation }) => {
+  const theme = useTheme();
   const [hasPermission, setHasPermission] = useState(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -66,11 +67,18 @@ const Training05Screen = ({ navigation }) => {
         )}
         <IconButton icon={isCameraOpen ? 'close' : 'camera'} mode={isCameraOpen ? 'contained-tonal' : 'contained'} style={styles.cameraButton} onPress={openCamera} />
       </View>
-      <SafeAreaView style={styles.sectionContainer}>
-        <Text variant="displayLarge">05<Text variant="labelMedium"> / 10</Text></Text>
-        <Text variant="bodyMedium">動かしづらい方の目でウインクしてみてください。</Text>
-        <Text variant="bodyMedium">難しいと思いますのでできなくても大丈夫です。</Text>
-        <Button mode="contained-tonal" style={styles.inputButton} onPress={addParams}>次へ</Button>
+      <SafeAreaView style={styles.inputContainer}>
+        <View>
+          <View style={styles.progress}>
+            <Text variant="displayLarge" style={{color: theme.colors.primary}}>05</Text>
+            <Text variant="labelMedium" style={{color: theme.colors.secondary}}> / 10</Text>
+          </View>
+          <Text variant="bodyMedium">動かしづらい方の目でウインクしてみてください。</Text>
+          <Text variant="bodyMedium">難しいと思いますのでできなくても大丈夫です。</Text>
+        </View>
+        <View>
+          <Button mode="contained-tonal" style={styles.inputButton} onPress={addParams}>次へ</Button>
+        </View>
       </SafeAreaView>
       <StatusBar style="auto" />
     </View>
@@ -82,13 +90,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cameraContainer: {
-    height: '50%',
+    flex: 1,
     backgroundColor: '#fff',
     position: 'relative',
   },
-  sectionContainer: {
+  inputContainer: {
+    height: 320,
     marginVertical: 16,
     marginHorizontal: 16,
+    justifyContent: 'space-between',
   },
 
   cameraButton: {
@@ -121,8 +131,12 @@ const styles = StyleSheet.create({
     objectFit: 'contain',
   },
 
+  progress: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
   inputButton: {
-    marginTop: 10,
+    marginBottom: 10,
   },
 });
 

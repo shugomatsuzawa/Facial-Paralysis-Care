@@ -64,14 +64,14 @@ const DataScreen = ({ navigation }) => {
           {items.map((item, index) => (
             <DataTable.Row key={item.id} onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={index === items.length - 1 ? styles.bb0 : ''}>
               <DataTable.Cell>{item.score}</DataTable.Cell>
-              <DataTable.Cell numeric>{item.date}</DataTable.Cell>
+              <DataTable.Cell numeric textStyle={{color: theme.colors.onSurfaceVariant}}>{item.date}</DataTable.Cell>
             </DataTable.Row>
           ))}
         </DataTable>
         <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
           {/* <List.Item title="インポート" titleStyle={{color: theme.colors.primary}} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} /> */}
-          {/* <List.Item title="エクスポート" titleStyle={items.length ? {color: theme.colors.primary} : {color: theme.colors.labelDisabled}} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} /> */}
-          <List.Item title="全てのデータを削除" titleStyle={items.length ? {color: theme.colors.error} : {color: theme.colors.labelDisabled}} onPress={items.length ? openDeleteDialog : ""} />
+          {/* <List.Item title="エクスポート" titleStyle={items.length ? {color: theme.colors.primary} : {color: theme.colors.onSurfaceDisabled}} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} /> */}
+          <List.Item title="全てのデータを削除" titleStyle={items.length ? {color: theme.colors.error} : {color: theme.colors.onSurfaceDisabled}} onPress={items.length ? openDeleteDialog : ""} />
         </List.Section>
       </SafeAreaView>
       <Portal>

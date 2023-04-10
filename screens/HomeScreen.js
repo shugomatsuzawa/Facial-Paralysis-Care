@@ -41,18 +41,18 @@ const HomeScreen = ({ navigation }) => {
           {items.map((item, index) => (
             <DataTable.Row key={item.id}>
               <DataTable.Cell>{item.score}</DataTable.Cell>
-              <DataTable.Cell numeric>{item.date}</DataTable.Cell>
+              <DataTable.Cell numeric textStyle={{color: theme.colors.onSurfaceVariant}}>{item.date}</DataTable.Cell>
             </DataTable.Row>
           ))}
         </DataTable>
         <List.Section>
-          <List.Item title="全てのデータを表示" onPress={() => navigation.navigate('Data')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceVariant} />} />
+          <List.Item title="全てのデータを表示" onPress={() => navigation.navigate('Data')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} />
         </List.Section>
       </SafeAreaView>
       <SafeAreaView style={styles.sectionContainer}>
         <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
-          <List.Item title="今日のテスト" onPress={() => navigation.navigate('Diagnose01')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceVariant} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
-          <List.Item title="今日のトレーニング（記録なし）" onPress={() => navigation.navigate('Training01')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceVariant} />} />
+          <List.Item title="今日のテスト" onPress={() => navigation.navigate('Diagnose01')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
+          <List.Item title="今日のトレーニング（記録なし）" onPress={() => navigation.navigate('Training01')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} />
         </List.Section>
         <Card onPress={() => navigation.navigate('About')} style={styles.mt10}>
           <Card.Cover source={{ uri: 'https://source.unsplash.com/random/640x480/?healing' }} style={styles.cardCover} />
