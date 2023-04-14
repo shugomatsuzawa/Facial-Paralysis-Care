@@ -17,7 +17,25 @@ const DetailScreen = ({ route, navigation }) => {
       db.transaction((tx) => {
           // 実行したいSQL
           tx.executeSql(
-            "SELECT rowid AS id, strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date, ansei, hitai, karui_heigan, tsuyoi_heigan, katame, biyoku, hoho, eee, kuchibue, henoji, ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS sum FROM health_data WHERE rowid = ?;",
+            "SELECT \
+              rowid AS id, \
+              strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date, \
+              ansei, \
+              hitai, \
+              karui_heigan, \
+              tsuyoi_heigan, \
+              katame, \
+              biyoku, \
+              hoho, \
+              eee, \
+              kuchibue, \
+              henoji, \
+              ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS sum \
+            FROM \
+              health_data \
+            WHERE \
+              rowid = ?\
+            ;",
             [params.id],
             (_, resultSet) => {
               // 成功時のコールバック
@@ -45,7 +63,11 @@ const DetailScreen = ({ route, navigation }) => {
     db.transaction((tx) => {
         // 実行したいSQL
         tx.executeSql(
-          "DELETE FROM health_data WHERE rowid = ?;",
+          "DELETE FROM \
+            health_data \
+          WHERE \
+            rowid = ?\
+          ;",
           [params.id],
           () => {
             // 成功時のコールバック

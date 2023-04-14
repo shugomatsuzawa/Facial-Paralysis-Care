@@ -31,7 +31,19 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
     db.transaction((tx) => {
         // 実行したいSQL
         tx.executeSql(
-          "CREATE TABLE IF NOT EXISTS health_data(created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')), ansei INTEGER, hitai INTEGER, karui_heigan INTEGER, tsuyoi_heigan INTEGER, katame INTEGER, biyoku INTEGER, hoho INTEGER, eee INTEGER, kuchibue INTEGER, henoji INTEGER);",
+          "CREATE TABLE IF NOT EXISTS health_data( \
+            created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')), \
+            ansei INTEGER, \
+            hitai INTEGER, \
+            karui_heigan INTEGER, \
+            tsuyoi_heigan INTEGER, \
+            katame INTEGER, \
+            biyoku INTEGER, \
+            hoho INTEGER, \
+            eee INTEGER, \
+            kuchibue INTEGER, \
+            henoji INTEGER \
+          );",
           null,
           () => {
             // 成功時のコールバック
@@ -44,14 +56,55 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
         });
 
         tx.executeSql(
-          "INSERT INTO health_data(ansei, hitai, karui_heigan, tsuyoi_heigan, katame, biyoku, hoho, eee, kuchibue, henoji) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+          "INSERT INTO health_data( \
+            ansei, \
+            hitai, \
+            karui_heigan, \
+            tsuyoi_heigan, \
+            katame, \
+            biyoku, \
+            hoho, \
+            eee, \
+            kuchibue, \
+            henoji \
+          ) \
+          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
           paramsArray,
           () => {
             console.log("INSERT TABLE Success.");
             if (paramsSum >= 20) {
               db.transaction((tx) => {
                   tx.executeSql(
-                    "SELECT (SELECT COUNT(rowid) FROM health_data LIMIT 2) AS has_data, (SELECT COUNT(rowid) FROM health_data WHERE ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji >= 40 LIMIT 2) AS has_40, (SELECT COUNT(rowid) FROM health_data WHERE ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji >= 20 LIMIT 2) AS has_20;",
+                    "SELECT \
+                      ( \
+                        SELECT \
+                        COUNT(rowid) \
+                        FROM \
+                          health_data \
+                        LIMIT \
+                          2 \
+                      ) AS has_data, \
+                      ( \
+                        SELECT \
+                        COUNT(rowid) \
+                        FROM \
+                          health_data \
+                        WHERE \
+                          ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji >= 40 \
+                        LIMIT \
+                          2 \
+                      ) AS has_40, \
+                      ( \
+                        SELECT \
+                        COUNT(rowid) \
+                        FROM \
+                          health_data \
+                        WHERE \
+                          ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji >= 20 \
+                        LIMIT \
+                          2 \
+                      ) AS has_20 \
+                    ;",
                     [],
                     (_, resultSet) => {
                       // 成功時のコールバック

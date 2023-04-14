@@ -17,7 +17,15 @@ const DataScreen = ({ navigation }) => {
       db.transaction((tx) => {
           // 実行したいSQL
           tx.executeSql(
-            "SELECT rowid AS id, strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date, ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS score FROM health_data;",
+            "SELECT \
+              rowid AS id, \
+              strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date, \
+              ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS score \
+            FROM \
+              health_data \
+            ORDER BY \
+              created_at DESC \
+            ;",
             [],
             (_, resultSet) => {
               // 成功時のコールバック
@@ -62,7 +70,7 @@ const DataScreen = ({ navigation }) => {
       <SafeAreaView style={styles.sectionContainer}>
         <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
           {items.map((item, index) => (
-            <DataTable.Row key={item.id} onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={index === items.length - 1 ? styles.bb0 : ''}>
+            <DataTable.Row key={item.id} onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={[index === items.length - 1 ? styles.bb0 : '', item.score >= 40 ? {borderStartWidth: 5, borderStartColor: 'gold'} : item.score >= 20 ? {borderStartWidth: 5, borderStartColor: 'silver'} : {borderStartWidth: 5, borderStartColor: 'transparent'}]}>
               <DataTable.Cell>{item.score}</DataTable.Cell>
               <DataTable.Cell numeric textStyle={{color: theme.colors.onSurfaceVariant}}>{item.date}</DataTable.Cell>
             </DataTable.Row>
@@ -112,6 +120,7 @@ const styles = StyleSheet.create({
   },
   roundedList: {
     borderRadius: 10,
+    overflow: 'hidden',
   },
   bb0: {
     borderBottomWidth: 0,

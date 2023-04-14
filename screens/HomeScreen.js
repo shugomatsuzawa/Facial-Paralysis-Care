@@ -14,7 +14,30 @@ const HomeScreen = ({ navigation }) => {
       db.transaction((tx) => {
           // 実行したいSQL
           tx.executeSql(
-            "SELECT rowid AS id, strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date, ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS score FROM health_data;",
+            "SELECT \
+              * \
+            FROM \
+              ( \
+                SELECT \
+                  rowid AS id, \
+                  strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date, \
+                  ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS score, \
+                  row_number() over ( \
+                    PARTITION BY \
+                      date(created_at, 'unixepoch', 'localtime') \
+                    ORDER BY \
+                      ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji DESC \
+                  ) date_id \
+                FROM \
+                  health_data \
+                WHERE \
+                  date(created_at, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') \
+                ORDER BY \
+                  created_at DESC \
+              ) with_date_id \
+            WHERE \
+              date_id = 1 \
+            ;",
             [],
             (_, resultSet) => {
               // 成功時のコールバック
@@ -39,9 +62,10 @@ const HomeScreen = ({ navigation }) => {
       <SafeAreaView style={{backgroundColor: theme.colors.surface}}>
         <DataTable>
           {items.map((item, index) => (
-            <DataTable.Row key={item.id}>
+            <DataTable.Row key={item.id} onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={item.score >= 40 ? {borderStartWidth: 5, borderStartColor: 'gold'} : item.score >= 20 ? {borderStartWidth: 5, borderStartColor: 'silver'} : {borderStartWidth: 5, borderStartColor: 'transparent'}}>
               <DataTable.Cell>{item.score}</DataTable.Cell>
               <DataTable.Cell numeric textStyle={{color: theme.colors.onSurfaceVariant}}>{item.date}</DataTable.Cell>
+              {/* <DataTable.Cell numeric>{item.date_id}</DataTable.Cell> */}
             </DataTable.Row>
           ))}
         </DataTable>
