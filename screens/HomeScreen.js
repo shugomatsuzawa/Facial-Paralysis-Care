@@ -1,14 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
-import { useTheme, DataTable, Card, List, Button, Text } from 'react-native-paper';
+import { StyleSheet, View, SafeAreaView, ScrollView, Pressable } from 'react-native';
+import { useTheme, Card, List, Button, Text, Badge } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
+import { CalendarList } from 'react-native-calendars';
 
 const HomeScreen = ({ navigation }) => {
   const theme = useTheme();
   const db = SQLite.openDatabase('db');
   const [items, setItems] = useState([]);
+  const today = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit",}).split("/").join("-");
+  // console.log(today)
+  const [calendarKey, setCalendarKey] = useState(0);
+  const reloadCalendar = () => {
+    setCalendarKey(calendarKey + 1);
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       db.transaction((tx) => {
@@ -20,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
               ( \
                 SELECT \
                   rowid AS id, \
-                  strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date, \
+                  strftime('%Y-%m-%d', created_at, 'unixepoch', 'localtime') AS date_string, \
                   ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS score, \
                   row_number() over ( \
                     PARTITION BY \
@@ -30,10 +38,6 @@ const HomeScreen = ({ navigation }) => {
                   ) date_id \
                 FROM \
                   health_data \
-                WHERE \
-                  date(created_at, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') \
-                ORDER BY \
-                  created_at DESC \
               ) with_date_id \
             WHERE \
               date_id = 1 \
@@ -57,21 +61,70 @@ const HomeScreen = ({ navigation }) => {
       );
     }, [])
   );
+
   return (
     <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
       <SafeAreaView style={{backgroundColor: theme.colors.surface}}>
-        <DataTable>
-          {items.map((item, index) => (
-            <DataTable.Row key={item.id} onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={item.score >= 40 ? {borderStartWidth: 5, borderStartColor: 'gold'} : item.score >= 20 ? {borderStartWidth: 5, borderStartColor: 'silver'} : {borderStartWidth: 5, borderStartColor: 'transparent'}}>
-              <DataTable.Cell>{item.score}</DataTable.Cell>
-              <DataTable.Cell numeric textStyle={{color: theme.colors.onSurfaceVariant}}>{item.date}</DataTable.Cell>
-              {/* <DataTable.Cell numeric>{item.date_id}</DataTable.Cell> */}
-            </DataTable.Row>
-          ))}
-        </DataTable>
-        <List.Section>
-          <List.Item title="全てのデータを表示" onPress={() => navigation.navigate('Data')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} />
-        </List.Section>
+        <CalendarList
+          current={today}
+          key={calendarKey}
+          staticHeader
+          calendarHeight={400}
+          horizontal={true}
+          pagingEnabled={true}
+          maxDate={today}
+          style = {{ backgroundColor: theme.colors.surface }}
+          dayComponent={({date, state}) => {
+            const item = items.find((v) => v.date_string === date.dateString);
+            if (item) {
+              return (
+                <Pressable onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={styles.calendarDayInner}>
+                  <Text style={state === 'disabled' ? {color: theme.colors.onSurfaceDisabled} : ''}>{date.day}</Text>
+                  <Badge style={[styles.calendarDayBadge, item.score >= 40 ? {backgroundColor: 'gold', color: '#000'} : item.score >= 20 ? {backgroundColor: 'silver', color: '#000'} : {backgroundColor: theme.colors.primary, color: theme.colors.onPrimary}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.onSurface}] : '']}>{JSON.stringify(item.score)}</Badge>
+                  {/* <Text>{JSON.stringify(state)}</Text> */}
+                </Pressable>
+              );
+            } else {
+              return (
+                <View style={styles.calendarDayInner}>
+                  <Text style={state === 'disabled' ? {color: theme.colors.onSurfaceDisabled} : ''}>{date.day}</Text>
+                  <Badge style={[styles.calendarDayBadge, {backgroundColor: theme.colors.surfaceDisabled}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.onSurface}] : '']} />
+                  {/* <Text>{JSON.stringify(state)}</Text> */}
+                </View>
+              );
+            }
+          }}
+          theme={{
+            calendarBackground: theme.colors.surface,
+            textSectionTitleColor: theme.colors.onSurface,
+            textSectionTitleDisabledColor: theme.colors.onSurfaceDisabled,
+            monthTextColor: theme.colors.onSurface,
+            arrowColor: theme.colors.primary,
+            'stylesheet.calendar.header': {
+              week: {
+                marginTop: 16,
+                marginBottom: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                borderBottomWidth: 1,
+                borderBottomColor: theme.colors.outlineVariant,
+              }
+            },
+            'stylesheet.calendar.main': {
+              dayContainer: {
+                flex: 1,
+                alignItems: 'center',
+              },
+              emptyDayContainer: {
+                flex: 1,
+              },
+            }
+          }}
+        />
+        <View style={styles.calendarButtons}>
+          <Button onPress={reloadCalendar}>今日</Button>
+          <Button onPress={() => navigation.navigate('Data')}>全てのデータを表示</Button>
+        </View>
       </SafeAreaView>
       <SafeAreaView style={styles.sectionContainer}>
         <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
@@ -99,8 +152,28 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     marginHorizontal: 16,
   },
+  calendarDayInner: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+  },
+  calendarDayBadge: {
+    alignSelf: 'auto',
+  },
+  calendarDayBadgeBorder: {
+    borderWidth: 3,
+    lineHeight: 14,
+  },
+  calendarButtons: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
   roundedList: {
     borderRadius: 10,
+    overflow: 'hidden',
   },
   cardCover: {
     margin: 6,
