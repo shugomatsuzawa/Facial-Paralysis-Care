@@ -70,7 +70,7 @@ const DataScreen = ({ navigation }) => {
       <SafeAreaView style={styles.sectionContainer}>
         <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
           {items.map((item, index) => (
-            <DataTable.Row key={item.id} onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={[index === items.length - 1 ? styles.bb0 : '', item.score >= 40 ? {borderStartWidth: 5, borderStartColor: 'gold'} : item.score >= 20 ? {borderStartWidth: 5, borderStartColor: 'silver'} : {borderStartWidth: 5, borderStartColor: 'transparent'}]}>
+            <DataTable.Row key={item.id} onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={[index === items.length - 1 ? styles.bb0 : '', styles.tableMark, item.score >= 40 ? {borderStartColor: theme.colors.badgeGold} : item.score >= 20 ? {borderStartColor: theme.colors.badgeSilver} : {borderStartColor: 'transparent'}]}>
               <DataTable.Cell>{item.score}</DataTable.Cell>
               <DataTable.Cell numeric textStyle={{color: theme.colors.onSurfaceVariant}}>{item.date}</DataTable.Cell>
             </DataTable.Row>
@@ -83,7 +83,7 @@ const DataScreen = ({ navigation }) => {
         </List.Section>
       </SafeAreaView>
       <Portal>
-        <Dialog visible={isDeleteDialogOpen} onDismiss={closeDeleteDialog}>
+        <Dialog visible={isDeleteDialogOpen} onDismiss={closeDeleteDialog} style={{backgroundColor: theme.colors.surface}}>
           <Dialog.Title>全てのデータを削除します</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">変更は元には戻せません。よろしいですか？</Text>
@@ -95,7 +95,7 @@ const DataScreen = ({ navigation }) => {
         </Dialog>
       </Portal>
       <Portal>
-        <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog}>
+        <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog} style={{backgroundColor: theme.colors.surface}}>
           <Dialog.Title>エラー</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">問題が発生しました</Text>
@@ -121,6 +121,9 @@ const styles = StyleSheet.create({
   roundedList: {
     borderRadius: 10,
     overflow: 'hidden',
+  },
+  tableMark: {
+    borderStartWidth: 5,
   },
   bb0: {
     borderBottomWidth: 0,

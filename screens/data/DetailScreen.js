@@ -144,7 +144,7 @@ const DetailScreen = ({ route, navigation }) => {
         </List.Section>
       </SafeAreaView>
       <Portal>
-        <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog}>
+        <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog} style={{backgroundColor: theme.colors.surface}}>
           <Dialog.Title>エラー</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">問題が発生しました</Text>

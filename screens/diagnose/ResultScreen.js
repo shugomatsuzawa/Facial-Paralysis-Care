@@ -201,7 +201,7 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
         <Button mode="contained" style={styles.inputButton} onPress={saveData}>保存</Button>
       </SafeAreaView>
       <Portal>
-        <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog}>
+        <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog} style={{backgroundColor: theme.colors.surface}}>
           <Dialog.Title>エラー</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">問題が発生しました</Text>

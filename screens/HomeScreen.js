@@ -80,7 +80,7 @@ const HomeScreen = ({ navigation }) => {
               return (
                 <Pressable onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={styles.calendarDayInner}>
                   <Text style={state === 'disabled' ? {color: theme.colors.onSurfaceDisabled} : ''}>{date.day}</Text>
-                  <Badge style={[styles.calendarDayBadge, item.score >= 40 ? {backgroundColor: 'gold', color: '#000'} : item.score >= 20 ? {backgroundColor: 'silver', color: '#000'} : {backgroundColor: theme.colors.primary, color: theme.colors.onPrimary}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.onSurface}] : '']}>{JSON.stringify(item.score)}</Badge>
+                  <Badge style={[styles.calendarDayBadge, item.score >= 40 ? {backgroundColor: theme.colors.badgeGold, color: theme.colors.onBadgeGold} : item.score >= 20 ? {backgroundColor: theme.colors.badgeSilver, color: theme.colors.onBadgeSilver} : {backgroundColor: theme.colors.primary, color: theme.colors.onPrimary}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.onSurface}] : '']}>{JSON.stringify(item.score)}</Badge>
                   {/* <Text>{JSON.stringify(state)}</Text> */}
                 </Pressable>
               );
@@ -128,10 +128,10 @@ const HomeScreen = ({ navigation }) => {
       </SafeAreaView>
       <SafeAreaView style={styles.sectionContainer}>
         <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
-          <List.Item title="今日のテスト" onPress={() => navigation.navigate('Diagnose01')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
-          <List.Item title="今日のトレーニング（記録なし）" onPress={() => navigation.navigate('Training01')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} />
+          <List.Item title="今日のテスト" onPress={() => navigation.navigate('Diagnose01')} left={() => <List.Icon icon="stethoscope" color={theme.colors.secondary} />} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} style={[styles.iconList, styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
+          <List.Item title="今日のトレーニング（記録なし）" onPress={() => navigation.navigate('Training01')} left={() => <List.Icon icon="dumbbell" color={theme.colors.tertiary} />} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} style={styles.iconList} />
         </List.Section>
-        <Card onPress={() => navigation.navigate('About')} style={styles.mt10}>
+        <Card onPress={() => navigation.navigate('About')} style={[styles.mt10, {backgroundColor: theme.colors.primaryContainer}]}>
           <Card.Cover source={{ uri: 'https://source.unsplash.com/random/640x480/?healing' }} style={styles.cardCover} />
           <Card.Content style={styles.mt10}>
             <Text variant="titleLarge">病気について</Text>
@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
   calendarDayBadgeBorder: {
     borderWidth: 3,
     lineHeight: 14,
+    paddingHorizontal: 0.
   },
   calendarButtons: {
     flex: 1,
@@ -174,6 +175,9 @@ const styles = StyleSheet.create({
   roundedList: {
     borderRadius: 10,
     overflow: 'hidden',
+  },
+  iconList: {
+    paddingHorizontal: 16,
   },
   cardCover: {
     margin: 6,
