@@ -4,7 +4,16 @@ import { StyleSheet, View, SafeAreaView, ScrollView, Pressable } from 'react-nat
 import { useTheme, Card, List, Button, Text, Badge } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
-import { CalendarList } from 'react-native-calendars';
+import { CalendarList, LocaleConfig } from 'react-native-calendars';
+
+LocaleConfig.locales['jp'] = {
+  monthNames: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+  monthNamesShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+  dayNames: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
+  dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
+  today: "今日"
+};
+LocaleConfig.defaultLocale = 'jp';
 
 const HomeScreen = ({ navigation }) => {
   const theme = useTheme();
@@ -68,6 +77,7 @@ const HomeScreen = ({ navigation }) => {
         <CalendarList
           current={today}
           key={calendarKey}
+          monthFormat={'yyyy年 M月'}
           staticHeader
           calendarHeight={400}
           horizontal={true}
