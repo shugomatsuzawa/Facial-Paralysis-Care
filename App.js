@@ -94,7 +94,7 @@ export default function App() {
 
       badgeGold: "#E8C16A",
       onBadgeGold: "rgb(25, 28, 30)",
-      badgeSilver: "#D4CDCA",
+      badgeSilver: "#c5c6c9",
       onBadgeSilver: "rgb(25, 28, 30)",
 
       "border": "rgb(65, 72, 77)",
@@ -154,7 +154,7 @@ export default function App() {
 
       badgeGold: "#E8C16A",
       onBadgeGold: "rgb(25, 28, 30)",
-      badgeSilver: "#A6A8AB",
+      badgeSilver: "#c5c6c9",
       onBadgeSilver: "rgb(25, 28, 30)",
 
       "border": "rgb(192, 199, 205)",

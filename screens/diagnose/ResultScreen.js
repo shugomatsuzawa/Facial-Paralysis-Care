@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
-import { useTheme, DataTable, Button, Dialog, Portal, Text } from 'react-native-paper';
+import { useTheme, DataTable, Button, Dialog, Portal, Text, Surface, ProgressBar, Card } from 'react-native-paper';
 import * as SQLite from 'expo-sqlite';
 
 const DiagnoseResultScreen = ({ route, navigation }) => {
@@ -25,6 +25,7 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
     params.henoji,
   ];
   const paramsSum = paramsArray.reduce((accumulator, current) => accumulator + current);
+  const scoreBar = paramsSum / 40;
 
   const saveData = () => {
     const db = SQLite.openDatabase('db');
@@ -155,50 +156,56 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
         <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
           <DataTable.Row>
             <DataTable.Cell>安静時非対称</DataTable.Cell>
-            <DataTable.Cell numeric>{JSON.stringify(params.ansei)}</DataTable.Cell>
+            <DataTable.Cell numeric>{params.ansei == 4 ? 'ほぼ正常(' + params.ansei + ')' : params.ansei == 2 ? '少し非対称(' + params.ansei + ')' : params.ansei == 0 ? 'かなり非対称(' + params.ansei + ')' : '**エラー**(' + params.ansei + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>額のしわ寄せ</DataTable.Cell>
-            <DataTable.Cell numeric>{JSON.stringify(params.hitai)}</DataTable.Cell>
+            <DataTable.Cell numeric>{params.hitai == 4 ? '動く(' + params.hitai + ')' : params.hitai == 2 ? '少し動く(' + params.hitai + ')' : params.hitai == 0 ? '動かない(' + params.hitai + ')' : '**エラー**(' + params.hitai + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>軽い閉眼</DataTable.Cell>
-            <DataTable.Cell numeric>{JSON.stringify(params.karui_heigan)}</DataTable.Cell>
+            <DataTable.Cell numeric>{params.karui_heigan == 4 ? '動く(' + params.karui_heigan + ')' : params.karui_heigan == 2 ? '少し動く(' + params.karui_heigan + ')' : params.karui_heigan == 0 ? '動かない(' + params.karui_heigan + ')' : '**エラー**(' + params.karui_heigan + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>強い閉眼</DataTable.Cell>
-            <DataTable.Cell numeric>{JSON.stringify(params.tsuyoi_heigan)}</DataTable.Cell>
+            <DataTable.Cell numeric>{params.tsuyoi_heigan == 4 ? '動く(' + params.tsuyoi_heigan + ')' : params.tsuyoi_heigan == 2 ? '少し動く(' + params.tsuyoi_heigan + ')' : params.tsuyoi_heigan == 0 ? '動かない(' + params.tsuyoi_heigan + ')' : '**エラー**(' + params.tsuyoi_heigan + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>片目つぶり</DataTable.Cell>
-            <DataTable.Cell numeric>{JSON.stringify(params.katame)}</DataTable.Cell>
+            <DataTable.Cell numeric>{params.katame == 4 ? '動く(' + params.katame + ')' : params.katame == 2 ? '少し動く(' + params.katame + ')' : params.katame == 0 ? '動かない(' + params.katame + ')' : '**エラー**(' + params.katame + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>鼻翼を動かす</DataTable.Cell>
-            <DataTable.Cell numeric>{JSON.stringify(params.biyoku)}</DataTable.Cell>
+            <DataTable.Cell numeric>{params.biyoku == 4 ? '動く(' + params.biyoku + ')' : params.biyoku == 2 ? '少し動く(' + params.biyoku + ')' : params.biyoku == 0 ? '動かない(' + params.biyoku + ')' : '**エラー**(' + params.biyoku + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>頬を膨らます</DataTable.Cell>
-            <DataTable.Cell numeric>{JSON.stringify(params.hoho)}</DataTable.Cell>
+            <DataTable.Cell numeric>{params.hoho == 4 ? '動く(' + params.hoho + ')' : params.hoho == 2 ? '少し動く(' + params.hoho + ')' : params.hoho == 0 ? '動かない(' + params.hoho + ')' : '**エラー**(' + params.hoho + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>イーと歯を見せる</DataTable.Cell>
-            <DataTable.Cell numeric>{JSON.stringify(params.eee)}</DataTable.Cell>
+            <DataTable.Cell numeric>{params.eee == 4 ? '動く(' + params.eee + ')' : params.eee == 2 ? '少し動く(' + params.eee + ')' : params.eee == 0 ? '動かない(' + params.eee + ')' : '**エラー**(' + params.eee + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>口笛</DataTable.Cell>
-            <DataTable.Cell numeric>{JSON.stringify(params.kuchibue)}</DataTable.Cell>
-          </DataTable.Row>
-          <DataTable.Row>
-            <DataTable.Cell>口をへの字に曲げる</DataTable.Cell>
-            <DataTable.Cell numeric>{JSON.stringify(params.henoji)}</DataTable.Cell>
+            <DataTable.Cell numeric>{params.kuchibue == 4 ? '動く(' + params.kuchibue + ')' : params.kuchibue == 2 ? '少し動く(' + params.kuchibue + ')' : params.kuchibue == 0 ? '動かない(' + params.kuchibue + ')' : '**エラー**(' + params.kuchibue + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row style={styles.bb0}>
-            <DataTable.Cell>合計</DataTable.Cell>
-            <DataTable.Cell numeric>{paramsSum} / 40</DataTable.Cell>
+            <DataTable.Cell>口をへの字に曲げる</DataTable.Cell>
+            <DataTable.Cell numeric>{params.henoji == 4 ? '動く(' + params.henoji + ')' : params.henoji == 2 ? '少し動く(' + params.henoji + ')' : params.henoji == 0 ? '動かない(' + params.henoji + ')' : '**エラー**(' + params.henoji + ')'}</DataTable.Cell>
           </DataTable.Row>
         </DataTable>
-        <Button mode="contained" style={styles.inputButton} onPress={saveData}>保存</Button>
+        <Card mode="contained" style={[styles.mt10, {backgroundColor: theme.colors.surface}]}>
+          <Card.Title title="合計" />
+          <Card.Content>
+            <View style={styles.scoreSum}>
+              <Text variant="displayLarge" style={{color: theme.colors.primary}}>{paramsSum}</Text>
+              <Text variant="labelMedium" style={{color: theme.colors.secondary}}> / 40</Text>
+            </View>
+            <ProgressBar progress={scoreBar} />
+          </Card.Content>
+        </Card>
+        <Button mode="contained" style={styles.mt10} onPress={saveData}>保存</Button>
       </SafeAreaView>
       <Portal>
         <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog} style={{backgroundColor: theme.colors.surface}}>
@@ -227,7 +234,11 @@ const styles = StyleSheet.create({
   roundedList: {
     borderRadius: 10,
   },
-  inputButton: {
+  scoreSum: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  mt10: {
     marginTop: 10,
   },
   bb0: {

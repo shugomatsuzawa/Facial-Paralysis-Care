@@ -19,7 +19,7 @@ const DetailScreen = ({ route, navigation }) => {
           tx.executeSql(
             "SELECT \
               rowid AS id, \
-              strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date, \
+              strftime('%Y/%m/%d %H:%M:%S', created_at, 'unixepoch', 'localtime') AS date, \
               ansei, \
               hitai, \
               karui_heigan, \
@@ -96,47 +96,47 @@ const DetailScreen = ({ route, navigation }) => {
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>安静時非対称</DataTable.Cell>
-            <DataTable.Cell numeric>{items.ansei}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.ansei == 4 ? 'ほぼ正常(' + items.ansei + ')' : items.ansei == 2 ? '少し非対称(' + items.ansei + ')' : items.ansei == 0 ? 'かなり非対称(' + items.ansei + ')' : '**エラー**(' + items.ansei + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>額のしわ寄せ</DataTable.Cell>
-            <DataTable.Cell numeric>{items.hitai}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.hitai == 4 ? '動く(' + items.hitai + ')' : items.hitai == 2 ? '少し動く(' + items.hitai + ')' : items.hitai == 0 ? '動かない(' + items.hitai + ')' : '**エラー**(' + items.hitai + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>軽い閉眼</DataTable.Cell>
-            <DataTable.Cell numeric>{items.karui_heigan}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.karui_heigan == 4 ? '動く(' + items.karui_heigan + ')' : items.karui_heigan == 2 ? '少し動く(' + items.karui_heigan + ')' : items.karui_heigan == 0 ? '動かない(' + items.karui_heigan + ')' : '**エラー**(' + items.karui_heigan + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>強い閉眼</DataTable.Cell>
-            <DataTable.Cell numeric>{items.tsuyoi_heigan}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.tsuyoi_heigan == 4 ? '動く(' + items.tsuyoi_heigan + ')' : items.tsuyoi_heigan == 2 ? '少し動く(' + items.tsuyoi_heigan + ')' : items.tsuyoi_heigan == 0 ? '動かない(' + items.tsuyoi_heigan + ')' : '**エラー**(' + items.tsuyoi_heigan + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>片目つぶり</DataTable.Cell>
-            <DataTable.Cell numeric>{items.katame}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.katame == 4 ? '動く(' + items.katame + ')' : items.katame == 2 ? '少し動く(' + items.katame + ')' : items.katame == 0 ? '動かない(' + items.katame + ')' : '**エラー**(' + items.katame + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>鼻翼を動かす</DataTable.Cell>
-            <DataTable.Cell numeric>{items.biyoku}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.biyoku == 4 ? '動く(' + items.biyoku + ')' : items.biyoku == 2 ? '少し動く(' + items.biyoku + ')' : items.biyoku == 0 ? '動かない(' + items.biyoku + ')' : '**エラー**(' + items.biyoku + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>頬を膨らます</DataTable.Cell>
-            <DataTable.Cell numeric>{items.hoho}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.hoho == 4 ? '動く(' + items.hoho + ')' : items.hoho == 2 ? '少し動く(' + items.hoho + ')' : items.hoho == 0 ? '動かない(' + items.hoho + ')' : '**エラー**(' + items.hoho + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>イーと歯を見せる</DataTable.Cell>
-            <DataTable.Cell numeric>{items.eee}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.eee == 4 ? '動く(' + items.eee + ')' : items.eee == 2 ? '少し動く(' + items.eee + ')' : items.eee == 0 ? '動かない(' + items.eee + ')' : '**エラー**(' + items.eee + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>口笛</DataTable.Cell>
-            <DataTable.Cell numeric>{items.kuchibue}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.kuchibue == 4 ? '動く(' + items.kuchibue + ')' : items.kuchibue == 2 ? '少し動く(' + items.kuchibue + ')' : items.kuchibue == 0 ? '動かない(' + items.kuchibue + ')' : '**エラー**(' + items.kuchibue + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>口をへの字に曲げる</DataTable.Cell>
-            <DataTable.Cell numeric>{items.henoji}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.henoji == 4 ? '動く(' + items.henoji + ')' : items.henoji == 2 ? '少し動く(' + items.henoji + ')' : items.henoji == 0 ? '動かない(' + items.henoji + ')' : '**エラー**(' + items.henoji + ')'}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row style={styles.bb0}>
             <DataTable.Cell>合計</DataTable.Cell>
-            <DataTable.Cell numeric>{items.sum}</DataTable.Cell>
+            <DataTable.Cell numeric>{items.sum} / 40</DataTable.Cell>
           </DataTable.Row>
         </DataTable>
         <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
