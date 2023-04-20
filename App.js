@@ -3,6 +3,7 @@ import { useColorScheme } from 'react-native';
 import { MD3LightTheme, MD3DarkTheme, adaptNavigationTheme, Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme, } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import HomeScreen from './screens/HomeScreen';
 import AboutScreen from './screens/AboutScreen';
@@ -163,6 +164,8 @@ export default function App() {
       "text": "rgb(25, 28, 30)",
     },
   };
+
+  NavigationBar.setBackgroundColorAsync(theme.colors.background);
 
   return (
     <PaperProvider theme={theme}>

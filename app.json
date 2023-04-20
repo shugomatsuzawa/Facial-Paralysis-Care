@@ -1,31 +1,50 @@
 {
   "expo": {
-    "name": "facial-paralysis-care",
+    "name": "Facial Paralysis Care",
     "slug": "facial-paralysis-care",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#f2f4f5"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.shugomatsuzawa",
-      "buildNumber": "1.0.0b"
+      "buildNumber": "1.0.0b",
+      "splash": {
+        "image": "./assets/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ebf2f8",
+        "dark": {
+          "backgroundColor": "#001e2c"
+        }
+      }
     },
     "android": {
       "package": "com.shugomatsuzawa",
       "versionCode": 1,
-      "permissions": ["CAMERA"],
+      "permissions": [
+        "CAMERA"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#f2f4f5"
+        // "monochromeImage": "./assets/adaptive-icon-monochrome.png",
+        "backgroundColor": "#ebf2f8"
+      },
+      "splash": {
+        "image": "./assets/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ebf2f8",
+        "dark": {
+          "backgroundColor": "#001e2c"
+        }
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d1aa2769-5f92-47fb-a128-ba7cbccdf85c"
       }
     }
   }
