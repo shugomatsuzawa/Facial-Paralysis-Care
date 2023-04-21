@@ -26,7 +26,10 @@
     "react-native-screens": "~3.20.0",
     "react-native-svg": "13.4.0",
     "expo-system-ui": "~2.2.1",
-    "expo-navigation-bar": "~2.1.1"
+    "expo-navigation-bar": "~2.1.1",
+    "expo-file-system": "~15.2.2",
+    "expo-sharing": "~11.2.2",
+    "expo-document-picker": "~11.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

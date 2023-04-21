@@ -1,15 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useTheme, DataTable, List, Button, Dialog, Portal, Text } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
 
 const DetailScreen = ({ route, navigation }) => {
   const theme = useTheme();
-  const db = SQLite.openDatabase('db');
+  const db = SQLite.openDatabase('FacialParalysisCare.db');
   const [items, setItems] = useState([]);
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
+  const [errorTitle, setErrorTitle] = useState('操作を完了できませんでした');
+  const [errorDescription, setErrorDescription] = useState('不明なエラーが発生しました。');
   const params = route.params
 
   useFocusEffect(
@@ -40,18 +42,18 @@ const DetailScreen = ({ route, navigation }) => {
             (_, resultSet) => {
               // 成功時のコールバック
               console.log("SELECT TABLE Success.");
-              // console.log("select result:" + JSON.stringify(resultSet.rows._array[0]));
+              // console.debug("select result:" + JSON.stringify(resultSet.rows._array[0]));
               setItems(resultSet.rows._array[0]);
             },
             () => {
               // 失敗時のコールバック
-              console.log("SELECT TABLE Failed.");
+              console.error("SELECT TABLE Failed.");
               openErrorDialog();
               setItems([]);
               return false;  // return true でロールバックする
           });
         },
-        () => { console.log("SELECT TABLE Failed All."); },
+        () => { console.error("SELECT TABLE Failed All."); },
         () => { console.log("SELECT TABLE Success All."); }
       );
     }, [])
@@ -76,12 +78,12 @@ const DetailScreen = ({ route, navigation }) => {
           },
           () => {
             // 失敗時のコールバック
-            console.log("DELETE Failed.");
+            console.error("DELETE Failed.");
             openErrorDialog();
             return true;  // return true でロールバックする
         });
       },
-      () => { console.log("deleteData Failed All."); },
+      () => { console.error("deleteData Failed All."); },
       () => { console.log("deleteData Success All."); }
     );
   }
@@ -145,9 +147,9 @@ const DetailScreen = ({ route, navigation }) => {
       </SafeAreaView>
       <Portal>
         <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog} style={{backgroundColor: theme.colors.surface}}>
-          <Dialog.Title>エラー</Dialog.Title>
+          <Dialog.Title>{errorTitle}</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">問題が発生しました</Text>
+            <Text variant="bodyMedium">{errorDescription}</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={closeErrorDialog}>OK</Button>

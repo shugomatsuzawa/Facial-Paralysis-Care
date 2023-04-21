@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "Facial Paralysis Care",
+    "name": "顔面神経麻痺ケア",
     "slug": "facial-paralysis-care",
     "version": "1.0.0",
+    "githubUrl": "https://github.com/shugomatsuzawa/Facial-Paralysis-Care",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
+    "icon": "./assets/icon.png",
     "assetBundlePatterns": [
       "**/*"
     ],

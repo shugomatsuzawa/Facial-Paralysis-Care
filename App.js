@@ -1,5 +1,5 @@
 import React from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, Platform } from 'react-native';
 import { MD3LightTheme, MD3DarkTheme, adaptNavigationTheme, Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme, } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -165,7 +165,9 @@ export default function App() {
     },
   };
 
-  NavigationBar.setBackgroundColorAsync(theme.colors.background);
+  if (Platform.OS === 'android') {
+    NavigationBar.setBackgroundColorAsync(theme.colors.background);
+  }
 
   return (
     <PaperProvider theme={theme}>

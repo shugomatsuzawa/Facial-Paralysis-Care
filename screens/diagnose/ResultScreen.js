@@ -1,16 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
-import { useTheme, DataTable, Button, Dialog, Portal, Text, Surface, ProgressBar, Card } from 'react-native-paper';
+import { useTheme, DataTable, Button, Dialog, Portal, Text, ProgressBar, Card } from 'react-native-paper';
 import * as SQLite from 'expo-sqlite';
 
 const DiagnoseResultScreen = ({ route, navigation }) => {
   const theme = useTheme();
   const params = route.params
-  // console.log(params);
+  // console.debug(params);
+  const db = SQLite.openDatabase('FacialParalysisCare.db');
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
   const openErrorDialog = () => setIsErrorDialogOpen(true);
   const closeErrorDialog = () => setIsErrorDialogOpen(false);
+  const [errorTitle, setErrorTitle] = useState('操作を完了できませんでした');
+  const [errorDescription, setErrorDescription] = useState('不明なエラーが発生しました。');
 
   const paramsArray = [
     params.ansei,
@@ -28,12 +31,11 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
   const scoreBar = paramsSum / 40;
 
   const saveData = () => {
-    const db = SQLite.openDatabase('db');
     db.transaction((tx) => {
         // 実行したいSQL
         tx.executeSql(
           "CREATE TABLE IF NOT EXISTS health_data( \
-            created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')), \
+            created_at INTEGER PRIMARY KEY NOT NULL DEFAULT (strftime('%s','now')), \
             ansei INTEGER, \
             hitai INTEGER, \
             karui_heigan INTEGER, \
@@ -52,7 +54,7 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
           },
           () => {
             // 失敗時のコールバック
-            console.log("CREATE TABLE Failed.");
+            console.error("CREATE TABLE Failed.");
             return true;  // return true でロールバックする
         });
 
@@ -109,7 +111,7 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
                     [],
                     (_, resultSet) => {
                       // 成功時のコールバック
-                      // console.log("resultSet:" + JSON.stringify(resultSet.rows._array));
+                      // console.debug("resultSet:" + JSON.stringify(resultSet.rows._array));
                       const hasData = resultSet.rows._array[0].has_data;
                       const has40 = resultSet.rows._array[0].has_40;
                       const has20 = resultSet.rows._array[0].has_20;
@@ -126,11 +128,11 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
                     },
                     () => {
                       // 失敗時のコールバック
-                      console.log("SELECT TABLE Failed.");
+                      console.error("SELECT TABLE Failed.");
                       return false;  // return true でロールバックする
                   });
                 },
-                () => { console.log("SELECT TABLE Failed All."); },
+                () => { console.error("SELECT TABLE Failed All."); },
                 () => { console.log("SELECT TABLE Success All."); }
               );
             } else {
@@ -140,12 +142,12 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
           },
           () => {
             // 失敗時のコールバック
-            console.log("INSERT TABLE Failed.");
+            console.error("INSERT TABLE Failed.");
             openErrorDialog();
             return true;  // return true でロールバックする
         });
       },
-      () => { console.log("saveData Failed All."); },
+      () => { console.error("saveData Failed All."); },
       () => { console.log("saveData Success All."); }
     );
   };
@@ -209,9 +211,9 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
       </SafeAreaView>
       <Portal>
         <Dialog visible={isErrorDialogOpen} onDismiss={closeErrorDialog} style={{backgroundColor: theme.colors.surface}}>
-          <Dialog.Title>エラー</Dialog.Title>
+          <Dialog.Title>{errorTitle}</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">問題が発生しました</Text>
+            <Text variant="bodyMedium">{errorDescription}</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={closeErrorDialog}>OK</Button>

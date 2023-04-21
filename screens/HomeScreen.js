@@ -17,10 +17,10 @@ LocaleConfig.defaultLocale = 'jp';
 
 const HomeScreen = ({ navigation }) => {
   const theme = useTheme();
-  const db = SQLite.openDatabase('db');
+  const db = SQLite.openDatabase('FacialParalysisCare.db');
   const [items, setItems] = useState([]);
   const today = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit",}).split("/").join("-");
-  // console.log(today)
+  // console.debug(today)
   const [calendarKey, setCalendarKey] = useState(0);
   const reloadCalendar = () => {
     setCalendarKey(calendarKey + 1);
@@ -55,17 +55,17 @@ const HomeScreen = ({ navigation }) => {
             (_, resultSet) => {
               // 成功時のコールバック
               console.log("SELECT TABLE Success.");
-              // console.log("select result:" + JSON.stringify(resultSet.rows._array));
+              // console.debug("select result:" + JSON.stringify(resultSet.rows._array));
               setItems(resultSet.rows._array);
             },
             () => {
               // 失敗時のコールバック
-              console.log("SELECT TABLE Failed.");
+              console.warn("SELECT TABLE Failed.");
               setItems([]);
               return false;  // return true でロールバックする
           });
         },
-        () => { console.log("SELECT TABLE Failed All."); },
+        () => { console.warn("SELECT TABLE Failed All."); },
         () => { console.log("SELECT TABLE Success All."); }
       );
     }, [])
