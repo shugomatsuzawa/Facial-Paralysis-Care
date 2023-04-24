@@ -5,6 +5,7 @@ import { useTheme, Card, List, Button, Text, Badge } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
+import AdventureImage from '../components/AdventureImage';
 
 LocaleConfig.locales['jp'] = {
   monthNames: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
@@ -142,10 +143,12 @@ const HomeScreen = ({ navigation }) => {
           <List.Item title="今日のトレーニング（記録なし）" onPress={() => navigation.navigate('Training01')} left={() => <List.Icon icon="dumbbell" color={theme.colors.tertiary} />} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} style={styles.iconList} />
         </List.Section>
         <Card onPress={() => navigation.navigate('About')} style={[styles.mt10, {backgroundColor: theme.colors.primaryContainer}]}>
-          <Card.Cover source={{ uri: 'https://source.unsplash.com/random/640x480/?healing' }} style={styles.cardCover} />
           <Card.Content style={styles.mt10}>
             <Text variant="titleLarge">はじめに</Text>
             <Text variant="bodyMedium">アプリの詳細情報と、顔面神経麻痺という病気について学びます。</Text>
+          </Card.Content>
+          <Card.Content style={styles.cardCover}>
+            <AdventureImage style={{width: '100%', height: 180, objectFit: 'contain',}} />
           </Card.Content>
         </Card>
       </SafeAreaView>
@@ -190,7 +193,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   cardCover: {
-    margin: 6,
+    marginTop: 10,
+    paddingBottom: 0,
   },
   mt10: {
     marginTop: 10,

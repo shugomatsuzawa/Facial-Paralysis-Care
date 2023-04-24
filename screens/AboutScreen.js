@@ -4,6 +4,7 @@ import { StyleSheet, SafeAreaView, ScrollView, View, Image } from 'react-native'
 import { useTheme, Text, List } from 'react-native-paper';
 import * as Linking from 'expo-linking';
 import * as appJson from '../app.json';
+import WildernessImage from '../components/WildernessImage';
 
 const AboutScreen = ({ navigation }) => {
   const theme = useTheme();
@@ -26,7 +27,7 @@ const AboutScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
       <View style={{backgroundColor: theme.colors.surface}}>
-        <Image source={{ uri: 'https://source.unsplash.com/random/640x480/?healing' }} style={{width: '100%', height: 250}} />
+        <WildernessImage style={{width: '100%', height: 200, objectFit: 'contain', backgroundColor: theme.colors.primaryContainer}} />
         <SafeAreaView style={styles.sectionContainer}>
           <Text variant="headlineLarge">顔面神経麻痺に関する詳しい情報</Text>
           <Text variant="bodyMedium" style={styles.mt10}>顔面神経麻痺の症状が現れた場合、早期に適切な治療を受けることが非常に重要です。まだ受診がお済みでない方はすぐにお近くの耳鼻咽喉科を受診してください。</Text>

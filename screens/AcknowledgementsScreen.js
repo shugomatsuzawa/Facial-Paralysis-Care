@@ -147,8 +147,7 @@ Your exercise of the Licensed Rights is expressly made subject to the following 
 
                iii. a notice that refers to this Public License;
 
-                iv. a notice that refers to the disclaimer of
-                    warranties;
+                iv. a notice that refers to the disclaimer of warranties;
 
                  v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
 
