@@ -7,6 +7,8 @@ import * as NavigationBar from 'expo-navigation-bar';
 
 import HomeScreen from './screens/HomeScreen';
 import AboutScreen from './screens/AboutScreen';
+import AcknowledgementsScreen from './screens/AcknowledgementsScreen';
+import WebViewScreen from './screens/WebViewScreen';
 import Diagnose01Screen from './screens/diagnose/01Screen';
 import Diagnose02Screen from './screens/diagnose/02Screen';
 import Diagnose03Screen from './screens/diagnose/03Screen';
@@ -173,8 +175,10 @@ export default function App() {
     <PaperProvider theme={theme}>
       <NavigationContainer theme={theme}>
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} options={{ title: '概要' }} />
-          <Stack.Screen name="About" component={AboutScreen} options={{ title: '病気について' }} />
+          <Stack.Screen name="Home" component={HomeScreen} options={{ title: '概要', headerLargeTitle: true }} />
+          <Stack.Screen name="About" component={AboutScreen} options={{ title: 'はじめに' }} />
+          <Stack.Screen name="Acknowledgements" component={AcknowledgementsScreen} options={{ title: '謝辞' }} />
+          <Stack.Screen name="WebView" component={WebViewScreen} options={{ title: '' }} />
           <Stack.Screen name="Diagnose01" component={Diagnose01Screen} options={{ title: '安静時非対称' }} />
           <Stack.Screen name="Diagnose02" component={Diagnose02Screen} options={{ title: '額のしわ寄せ' }} />
           <Stack.Screen name="Diagnose03" component={Diagnose03Screen} options={{ title: '軽い閉眼' }} />

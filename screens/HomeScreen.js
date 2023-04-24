@@ -144,8 +144,8 @@ const HomeScreen = ({ navigation }) => {
         <Card onPress={() => navigation.navigate('About')} style={[styles.mt10, {backgroundColor: theme.colors.primaryContainer}]}>
           <Card.Cover source={{ uri: 'https://source.unsplash.com/random/640x480/?healing' }} style={styles.cardCover} />
           <Card.Content style={styles.mt10}>
-            <Text variant="titleLarge">病気について</Text>
-            <Text variant="bodyMedium">顔面神経麻痺について学びます。</Text>
+            <Text variant="titleLarge">はじめに</Text>
+            <Text variant="bodyMedium">アプリの詳細情報と、顔面神経麻痺という病気について学びます。</Text>
           </Card.Content>
         </Card>
       </SafeAreaView>

@@ -120,7 +120,7 @@ const DataScreen = ({ navigation }) => {
             // 実行したいSQL
             tx.executeSql(
               "CREATE TABLE IF NOT EXISTS health_data( \
-                created_at INTEGER PRIMARY KEY NOT NULL DEFAULT (strftime('%s','now')), \
+                created_at INTEGER UNIQUE NOT NULL DEFAULT (strftime('%s','now')), \
                 ansei INTEGER, \
                 hitai INTEGER, \
                 karui_heigan INTEGER, \
@@ -209,6 +209,7 @@ const DataScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
       <SafeAreaView style={styles.sectionContainer}>
+        {items.length > 0 ? (
         <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
           {items.map((item, index) => (
             <DataTable.Row key={item.id} onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={[index === items.length - 1 ? styles.bb0 : '', styles.tableMark, item.score >= 40 ? {borderStartColor: theme.colors.badgeGold} : item.score >= 20 ? {borderStartColor: theme.colors.badgeSilver} : {borderStartColor: 'transparent'}]}>
@@ -217,9 +218,12 @@ const DataScreen = ({ navigation }) => {
             </DataTable.Row>
           ))}
         </DataTable>
+        ) : (
+          <Text variant="labelLarge">データなし</Text>
+        )}
         <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
           <List.Item title="インポート" titleStyle={{color: theme.colors.primary}} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} onPress={importFile} />
-          <List.Item title="エクスポート" titleStyle={items.length ? {color: theme.colors.primary} : {color: theme.colors.onSurfaceDisabled}} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} onPress={exportFile} />
+          <List.Item title="エクスポート" titleStyle={items.length ? {color: theme.colors.primary} : {color: theme.colors.onSurfaceDisabled}} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} onPress={items.length ? exportFile : ""} />
           <List.Item title="全てのデータを削除" titleStyle={items.length ? {color: theme.colors.error} : {color: theme.colors.onSurfaceDisabled}} onPress={items.length ? openDeleteDialog : ""} />
         </List.Section>
       </SafeAreaView>

@@ -35,7 +35,7 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
         // 実行したいSQL
         tx.executeSql(
           "CREATE TABLE IF NOT EXISTS health_data( \
-            created_at INTEGER PRIMARY KEY NOT NULL DEFAULT (strftime('%s','now')), \
+            created_at INTEGER UNIQUE NOT NULL DEFAULT (strftime('%s','now')), \
             ansei INTEGER, \
             hitai INTEGER, \
             karui_heigan INTEGER, \

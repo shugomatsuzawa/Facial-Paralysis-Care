@@ -8,7 +8,10 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "react": "18.2.0",
+    "react-native": "0.71.6",
     "@react-native-community/masked-view": "^0.1.11",
+    "react-native-webview": "11.26.0",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "expo": "~48.0.11",
@@ -16,20 +19,19 @@
     "expo-splash-screen": "~0.18.1",
     "expo-sqlite": "~11.1.1",
     "expo-status-bar": "~1.4.4",
-    "react": "18.2.0",
-    "react-native": "0.71.6",
-    "react-native-calendars": "^1.1295.0",
-    "react-native-gesture-handler": "~2.9.0",
-    "react-native-paper": "^5.5.2",
-    "react-native-reanimated": "~2.14.4",
-    "react-native-safe-area-context": "4.5.0",
-    "react-native-screens": "~3.20.0",
-    "react-native-svg": "13.4.0",
     "expo-system-ui": "~2.2.1",
     "expo-navigation-bar": "~2.1.1",
     "expo-file-system": "~15.2.2",
     "expo-sharing": "~11.2.2",
-    "expo-document-picker": "~11.2.2"
+    "expo-document-picker": "~11.2.2",
+    "expo-linking": "~4.0.1",
+    "react-native-gesture-handler": "~2.9.0",
+    "react-native-reanimated": "~2.14.4",
+    "react-native-screens": "~3.20.0",
+    "react-native-svg": "13.4.0",
+    "react-native-paper": "^5.5.2",
+    "react-native-safe-area-context": "4.5.0",
+    "react-native-calendars": "^1.1295.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
