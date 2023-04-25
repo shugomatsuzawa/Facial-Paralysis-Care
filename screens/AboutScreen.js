@@ -65,7 +65,8 @@ const AboutScreen = ({ navigation }) => {
       <SafeAreaView style={styles.sectionContainer}>
         <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
           <List.Item title="開発者Webサイト" onPress={() => openBrowser('https://shugomatsuzawa.com')} right={() => <List.Icon icon="open-in-new" color={theme.colors.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
-          <List.Item title="プライバシーポリシー" onPress={() => navigation.navigate('WebView', { uri: 'https://shugomatsuzawa.com' })} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
+          <List.Item title="問題を報告" onPress={() => openBrowser('https://github.com/shugomatsuzawa/Facial-Paralysis-Care/issues')} right={() => <List.Icon icon="open-in-new" color={theme.colors.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
+          <List.Item title="プライバシーポリシー" onPress={() => navigation.navigate('WebView', { uri: 'https://shugomatsuzawa.com/privacy/' })} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
           <List.Item title="謝辞" onPress={() => navigation.navigate('Acknowledgements')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} />
         </List.Section>
         <Text variant="bodyMedium" style={styles.mt10}>バージョン {version}</Text>

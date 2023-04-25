@@ -91,7 +91,7 @@ const DataScreen = ({ navigation }) => {
             let fileUri = FileSystem.cacheDirectory + fileName + ".json";
             let txtFile = JSON.stringify(resultSet.rows._array);
             await FileSystem.writeAsStringAsync(fileUri, txtFile, { encoding: FileSystem.EncodingType.UTF8 });
-            await Sharing.shareAsync(fileUri);
+            await Sharing.shareAsync(fileUri, {mimeType: 'application/json'});
             await FileSystem.deleteAsync(fileUri);
             })();
           },
