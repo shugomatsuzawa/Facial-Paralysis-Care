@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useRef } from 'react';
-import { StyleSheet, View, SafeAreaView, Image, Pressable } from 'react-native';
+import { View, SafeAreaView, Image, Pressable } from 'react-native';
 import { useTheme, Button, IconButton, Text } from 'react-native-paper';
 import { Camera, CameraType } from 'expo-camera';
+import styles from '../../components/DiagnoseStyle';
 
 const Training08Screen = ({ navigation }) => {
   const theme = useTheme();
@@ -47,15 +48,9 @@ const Training08Screen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.cameraContainer}>
-        {isCameraOpen && hasPermission === null ? (
+        {isCameraOpen && !hasPermission ? (
           <View style={styles.cameraError}>
-            <Text>Requesting camera permission</Text>
-            <Button onPress={getPermission}>Grant Permission</Button>
-          </View>
-        ) : isCameraOpen && hasPermission === false ? (
-          <View style={styles.cameraError}>
-            <Text>No access to camera</Text>
-            <Button onPress={getPermission}>Grant Permission</Button>
+            <Text style={styles.cameraErrorText}>カメラへのアクセスを許可してください</Text>
           </View>
         ) : isCameraOpen ? (
           <Pressable onPress={pauseCamera}>
@@ -83,60 +78,5 @@ const Training08Screen = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  cameraContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    position: 'relative',
-  },
-  inputContainer: {
-    height: 320,
-    marginVertical: 16,
-    marginHorizontal: 16,
-    justifyContent: 'space-between',
-  },
-
-  cameraButton: {
-    position: 'absolute',
-    bottom: 10,
-    right: 16,
-  },
-  cameraError: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 16,
-    marginHorizontal: 16,
-  },
-  camera: {
-    width: '100%',
-    height: '100%',
-  },
-  cameraPauseText: {
-    position: 'absolute',
-    bottom: 20,
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    color: '#fff',
-  },
-  exampleImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'contain',
-  },
-
-  progress: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-  },
-  inputButton: {
-    marginBottom: 10,
-  },
-});
 
 export default Training08Screen;

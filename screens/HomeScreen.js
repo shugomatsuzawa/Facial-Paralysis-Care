@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, View, SafeAreaView, ScrollView, Pressable, Appearance } from 'react-native';
 import { useTheme, Card, List, Button, Text, Badge } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
@@ -24,8 +24,11 @@ const HomeScreen = ({ navigation }) => {
   // console.debug(today)
   const [calendarKey, setCalendarKey] = useState(0);
   const reloadCalendar = () => {
+    // console.debug("change Appearance");
     setCalendarKey(calendarKey + 1);
   };
+  const changeAppearance = Appearance.addChangeListener(reloadCalendar);
+  // changeAppearance.remove();
 
   useFocusEffect(
     React.useCallback(() => {

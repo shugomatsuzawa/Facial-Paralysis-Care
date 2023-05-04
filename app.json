@@ -8,6 +8,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
+    "locales": { "ja": "./languages/ja.json" },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -22,6 +23,10 @@
         "dark": {
           "backgroundColor": "#001e2c"
         }
+      },
+      "infoPlist": {
+        "CFBundleLocalizations" : ["ja"],
+        "CFBundleDevelopmentRegion" : "ja"
       }
     },
     "android": {
