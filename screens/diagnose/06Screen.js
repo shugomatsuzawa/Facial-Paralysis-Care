@@ -49,7 +49,7 @@ const Diagnose06Screen = ({ route, navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.colors.dynamic.background}]}>
       <View style={styles.cameraContainer}>
         {isCameraOpen && !hasPermission ? (
           <View style={styles.cameraError}>
@@ -68,8 +68,8 @@ const Diagnose06Screen = ({ route, navigation }) => {
       <SafeAreaView style={styles.inputContainer}>
         <View>
           <View style={styles.progress}>
-            <Text variant="displayLarge" style={{color: theme.colors.primary}}>06</Text>
-            <Text variant="labelMedium" style={{color: theme.colors.secondary}}> / 10</Text>
+            <Text variant="displayLarge" style={{color: theme.colors.dynamic.primary}}>06</Text>
+            <Text variant="labelMedium" style={{color: theme.colors.dynamic.secondary}}> / 10</Text>
           </View>
           <Text variant="bodyMedium">匂いを嗅ぐように鼻を動かしてみてください。</Text>
         </View>

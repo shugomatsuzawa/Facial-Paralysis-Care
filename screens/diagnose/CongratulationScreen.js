@@ -11,7 +11,7 @@ const DiagnoseCongratulationScreen = ({ route, navigation }) => {
   console.log(isFirst);
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.colors.surface}]}>
+    <View style={[styles.container, {backgroundColor: theme.colors.dynamic.surface}]}>
       <SafeAreaView style={styles.sectionContainer}>
         {isFirst == 40 ? (
           <PerfectImage style={styles.completeImage} />

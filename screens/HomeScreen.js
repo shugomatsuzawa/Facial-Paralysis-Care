@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, Pressable, Appearance } from 'react-native';
+import { StyleSheet, View, SafeAreaView, ScrollView, Platform, Appearance, Pressable } from 'react-native';
 import { useTheme, Card, List, Button, Text, Badge } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
@@ -22,13 +22,16 @@ const HomeScreen = ({ navigation }) => {
   const [items, setItems] = useState([]);
   const today = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit",}).split("/").join("-");
   // console.debug(today)
+
   const [calendarKey, setCalendarKey] = useState(0);
   const reloadCalendar = () => {
-    // console.debug("change Appearance");
-    setCalendarKey(calendarKey + 1);
+    // console.debug("change Appearance: " + Appearance.getColorScheme());
+    setTimeout(() => {setCalendarKey(calendarKey + 1)},100);
   };
-  const changeAppearance = Appearance.addChangeListener(reloadCalendar);
-  // changeAppearance.remove();
+  if (Platform.OS !== 'ios') {
+    const changeAppearance = Appearance.addChangeListener(reloadCalendar);
+    // changeAppearance.remove();
+  }
 
   useFocusEffect(
     React.useCallback(() => {
@@ -76,8 +79,8 @@ const HomeScreen = ({ navigation }) => {
   );
 
   return (
-    <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
-      <SafeAreaView style={{backgroundColor: theme.colors.surface}}>
+    <ScrollView style={[styles.container, {backgroundColor: theme.colors.dynamic.background}]} contentInsetAdjustmentBehavior="automatic">
+      <SafeAreaView style={{backgroundColor: theme.colors.dynamic.surface}}>
         <CalendarList
           current={today}
           key={calendarKey}
@@ -87,33 +90,33 @@ const HomeScreen = ({ navigation }) => {
           horizontal={true}
           pagingEnabled={true}
           maxDate={today}
-          style = {{ backgroundColor: theme.colors.surface }}
+          style = {{ backgroundColor: theme.colors.dynamic.surface }}
           dayComponent={({date, state}) => {
             const item = items.find((v) => v.date_string === date.dateString);
             if (item) {
               return (
                 <Pressable onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={styles.calendarDayInner}>
-                  <Text style={state === 'disabled' ? {color: theme.colors.onSurfaceDisabled} : ''}>{date.day}</Text>
-                  <Badge style={[styles.calendarDayBadge, item.score >= 40 ? {backgroundColor: theme.colors.badgeGold, color: theme.colors.onBadgeGold} : item.score >= 20 ? {backgroundColor: theme.colors.badgeSilver, color: theme.colors.onBadgeSilver} : {backgroundColor: theme.colors.primary, color: theme.colors.onPrimary}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.onSurface}] : '']}>{JSON.stringify(item.score)}</Badge>
+                  <Text style={state === 'disabled' ? {color: theme.colors.dynamic.onSurfaceDisabled} : ''}>{date.day}</Text>
+                  <Badge style={[styles.calendarDayBadge, item.score >= 40 ? {backgroundColor: theme.colors.badgeGold, color: theme.colors.dynamic.onBadgeGold} : item.score >= 20 ? {backgroundColor: theme.colors.badgeSilver, color: theme.colors.dynamic.onBadgeSilver} : {backgroundColor: theme.colors.dynamic.primary, color: theme.colors.dynamic.onPrimary}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.dynamic.onSurface}] : '']}>{JSON.stringify(item.score)}</Badge>
                   {/* <Text>{JSON.stringify(state)}</Text> */}
                 </Pressable>
               );
             } else {
               return (
                 <View style={styles.calendarDayInner}>
-                  <Text style={state === 'disabled' ? {color: theme.colors.onSurfaceDisabled} : ''}>{date.day}</Text>
-                  <Badge style={[styles.calendarDayBadge, {backgroundColor: theme.colors.surfaceDisabled}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.onSurface}] : '']} />
+                  <Text style={state === 'disabled' ? {color: theme.colors.dynamic.onSurfaceDisabled} : ''}>{date.day}</Text>
+                  <Badge style={[styles.calendarDayBadge, {backgroundColor: theme.colors.dynamic.surfaceDisabled}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.dynamic.onSurface}] : '']} />
                   {/* <Text>{JSON.stringify(state)}</Text> */}
                 </View>
               );
             }
           }}
           theme={{
-            calendarBackground: theme.colors.surface,
-            textSectionTitleColor: theme.colors.onSurface,
-            textSectionTitleDisabledColor: theme.colors.onSurfaceDisabled,
-            monthTextColor: theme.colors.onSurface,
-            arrowColor: theme.colors.primary,
+            calendarBackground: theme.colors.dynamic.surface,
+            textSectionTitleColor: theme.colors.dynamic.onSurface,
+            textSectionTitleDisabledColor: theme.colors.dynamic.onSurfaceDisabled,
+            monthTextColor: theme.colors.dynamic.onSurface,
+            arrowColor: theme.colors.dynamic.primary,
             'stylesheet.calendar.header': {
               week: {
                 marginTop: 16,
@@ -121,7 +124,7 @@ const HomeScreen = ({ navigation }) => {
                 flexDirection: 'row',
                 justifyContent: 'space-around',
                 borderBottomWidth: 1,
-                borderBottomColor: theme.colors.outlineVariant,
+                borderBottomColor: theme.colors.dynamic.outlineVariant,
               }
             },
             'stylesheet.calendar.main': {
@@ -141,9 +144,9 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </SafeAreaView>
       <SafeAreaView style={styles.sectionContainer}>
-        <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
-          <List.Item title="今日のテスト" onPress={() => navigation.navigate('Diagnose01')} left={() => <List.Icon icon="stethoscope" color={theme.colors.secondary} />} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} style={[styles.iconList, styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
-          <List.Item title="今日のトレーニング（記録なし）" onPress={() => navigation.navigate('Training01')} left={() => <List.Icon icon="dumbbell" color={theme.colors.tertiary} />} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} style={styles.iconList} />
+        <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.dynamic.surface}]}>
+          <List.Item title="今日のテスト" onPress={() => navigation.navigate('Diagnose01')} left={() => <List.Icon icon="stethoscope" color={theme.colors.dynamic.secondary} />} right={() => <List.Icon icon="chevron-right" color={theme.colors.dynamic.onSurfaceDisabled} />} style={[styles.iconList, styles.bb1, {borderBottomColor: theme.colors.dynamic.outlineVariant}]} />
+          <List.Item title="今日のトレーニング（記録なし）" onPress={() => navigation.navigate('Training01')} left={() => <List.Icon icon="dumbbell" color={theme.colors.dynamic.tertiary} />} right={() => <List.Icon icon="chevron-right" color={theme.colors.dynamic.onSurfaceDisabled} />} style={styles.iconList} />
         </List.Section>
         <Card onPress={() => navigation.navigate('About')} style={[styles.mt10, {backgroundColor: theme.colors.primaryContainer}]}>
           <Card.Content style={styles.mt10}>

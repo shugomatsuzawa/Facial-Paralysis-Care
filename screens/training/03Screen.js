@@ -46,7 +46,7 @@ const Training03Screen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.colors.dynamic.background}]}>
       <View style={styles.cameraContainer}>
         {isCameraOpen && !hasPermission ? (
           <View style={styles.cameraError}>
@@ -65,8 +65,8 @@ const Training03Screen = ({ navigation }) => {
       <SafeAreaView style={styles.inputContainer}>
         <View>
           <View style={styles.progress}>
-            <Text variant="displayLarge" style={{color: theme.colors.primary}}>03</Text>
-            <Text variant="labelMedium" style={{color: theme.colors.secondary}}> / 10</Text>
+            <Text variant="displayLarge" style={{color: theme.colors.dynamic.primary}}>03</Text>
+            <Text variant="labelMedium" style={{color: theme.colors.dynamic.secondary}}> / 10</Text>
           </View>
           <Text variant="bodyMedium">軽く目をつぶってみてください。</Text>
         </View>

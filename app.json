@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.shugomatsuzawa",
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.0.002",
       "splash": {
         "image": "./assets/splash.png",
         "resizeMode": "contain",
@@ -31,7 +31,7 @@
     },
     "android": {
       "package": "com.shugomatsuzawa",
-      "versionCode": 1,
+      "versionCode": 3,
       "permissions": [
         "CAMERA"
       ],

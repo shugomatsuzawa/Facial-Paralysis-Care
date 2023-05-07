@@ -25,9 +25,9 @@ const AboutScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
-      <View style={{backgroundColor: theme.colors.surface}}>
-        <WildernessImage style={{width: '100%', height: 200, objectFit: 'contain', backgroundColor: theme.colors.primaryContainer}} />
+    <ScrollView style={[styles.container, {backgroundColor: theme.colors.dynamic.background}]} contentInsetAdjustmentBehavior="automatic">
+      <View style={{backgroundColor: theme.colors.dynamic.surface}}>
+        <WildernessImage style={{width: '100%', height: 200, objectFit: 'contain', backgroundColor: theme.colors.dynamic.primaryContainer}} />
         <SafeAreaView style={styles.sectionContainer}>
           <Text variant="headlineLarge">顔面神経麻痺に関する詳しい情報</Text>
           <Text variant="bodyMedium" style={styles.mt10}>顔面神経麻痺の症状が現れた場合、早期に適切な治療を受けることが非常に重要です。まだ受診がお済みでない方はすぐにお近くの耳鼻咽喉科を受診してください。</Text>
@@ -63,14 +63,14 @@ const AboutScreen = ({ navigation }) => {
         </SafeAreaView>
       </View>
       <SafeAreaView style={styles.sectionContainer}>
-        <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
-          <List.Item title="開発者Webサイト" onPress={() => openBrowser('https://shugomatsuzawa.com/works/2023/facial-paralysis-care/')} right={() => <List.Icon icon="open-in-new" color={theme.colors.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
-          <List.Item title="問題を報告" onPress={() => openBrowser('https://github.com/shugomatsuzawa/Facial-Paralysis-Care/issues')} right={() => <List.Icon icon="open-in-new" color={theme.colors.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
-          <List.Item title="プライバシーポリシー" onPress={() => navigation.navigate('WebView', { uri: 'https://shugomatsuzawa.com/privacy/' })} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.outlineVariant}]} />
-          <List.Item title="謝辞" onPress={() => navigation.navigate('Acknowledgements')} right={() => <List.Icon icon="chevron-right" color={theme.colors.onSurfaceDisabled} />} />
+        <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.dynamic.surface}]}>
+          <List.Item title="開発者Webサイト" onPress={() => openBrowser('https://shugomatsuzawa.com/works/2023/facial-paralysis-care/')} right={() => <List.Icon icon="open-in-new" color={theme.colors.dynamic.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.dynamic.outlineVariant}]} />
+          <List.Item title="問題を報告" onPress={() => openBrowser('https://github.com/shugomatsuzawa/Facial-Paralysis-Care/issues')} right={() => <List.Icon icon="open-in-new" color={theme.colors.dynamic.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.dynamic.outlineVariant}]} />
+          <List.Item title="プライバシーポリシー" onPress={() => navigation.navigate('WebView', { uri: 'https://shugomatsuzawa.com/privacy/' })} right={() => <List.Icon icon="chevron-right" color={theme.colors.dynamic.onSurfaceDisabled} />} style={[styles.bb1, {borderBottomColor: theme.colors.dynamic.outlineVariant}]} />
+          <List.Item title="謝辞" onPress={() => navigation.navigate('Acknowledgements')} right={() => <List.Icon icon="chevron-right" color={theme.colors.dynamic.onSurfaceDisabled} />} />
         </List.Section>
         <Text variant="bodyMedium" style={styles.mt10}>バージョン {version}</Text>
-        <Text variant="bodyMedium" style={[styles.mt10, {color: theme.colors.onSurfaceDisabled}]}>©︎ 2023 Shugo Matsuzawa</Text>
+        <Text variant="bodyMedium" style={[styles.mt10, {color: theme.colors.dynamic.onSurfaceDisabled}]}>©︎ 2023 Shugo Matsuzawa</Text>
       </SafeAreaView>
       <StatusBar style="auto" />
     </ScrollView>

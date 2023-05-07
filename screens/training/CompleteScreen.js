@@ -7,7 +7,7 @@ import CompleteImage from '../../components/CompleteImage';
 const TrainingCompleteScreen = ({ navigation }) => {
   const theme = useTheme();
   return (
-    <View style={[styles.container, {backgroundColor: theme.colors.surface}]}>
+    <View style={[styles.container, {backgroundColor: theme.colors.dynamic.surface}]}>
       <SafeAreaView style={styles.sectionContainer}>
         <CompleteImage style={styles.completeImage} />
         <Text variant="headlineMedium">お疲れ様でした</Text>

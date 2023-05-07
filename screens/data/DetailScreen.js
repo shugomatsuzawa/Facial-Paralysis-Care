@@ -89,9 +89,9 @@ const DetailScreen = ({ route, navigation }) => {
   }
 
   return (
-    <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
+    <ScrollView style={[styles.container, {backgroundColor: theme.colors.dynamic.background}]} contentInsetAdjustmentBehavior="automatic">
       <SafeAreaView style={styles.sectionContainer}>
-        <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
+        <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.dynamic.surface}]}>
           <DataTable.Row>
             <DataTable.Cell>日付</DataTable.Cell>
             <DataTable.Cell numeric>{items.date}</DataTable.Cell>
@@ -141,8 +141,8 @@ const DetailScreen = ({ route, navigation }) => {
             <DataTable.Cell numeric>{items.sum} / 40</DataTable.Cell>
           </DataTable.Row>
         </DataTable>
-        <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
-          <List.Item title="データを削除" titleStyle={{color: theme.colors.error}} onPress={deleteData} />
+        <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.dynamic.surface}]}>
+          <List.Item title="データを削除" titleStyle={{color: theme.colors.dynamic.error}} onPress={deleteData} />
         </List.Section>
       </SafeAreaView>
       <Portal>

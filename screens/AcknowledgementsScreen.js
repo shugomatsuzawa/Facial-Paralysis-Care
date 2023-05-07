@@ -22,7 +22,7 @@ const AcknowledgementsScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={[styles.container]} contentInsetAdjustmentBehavior="automatic">
+    <ScrollView style={[styles.container, {backgroundColor: theme.colors.dynamic.background}]} contentInsetAdjustmentBehavior="automatic">
       <SafeAreaView style={styles.sectionContainer}>
         <Text variant="titleMedium">Acknowledgements</Text>
         <Text variant="bodyMedium">This application makes use of the following third party libraries:</Text>
@@ -45,7 +45,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         <Text variant="titleMedium">React Native</Text>
         <Text variant="bodyMedium">Copyright (c) 2015-present, Facebook, Inc.</Text>
         <Pressable onPress={() => openBrowser('https://creativecommons.org/licenses/by/4.0/')}>
-          <Text variant="bodyMedium" style={{color: theme.colors.primary}}>CC-BY-4.0</Text>
+          <Text variant="bodyMedium" style={{color: theme.colors.dynamic.primary}}>CC-BY-4.0</Text>
         </Pressable>
         <Text variant="bodyMedium">
           {`Attribution 4.0 International

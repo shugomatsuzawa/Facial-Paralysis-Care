@@ -153,9 +153,9 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container} contentInsetAdjustmentBehavior="automatic">
+    <ScrollView style={[styles.container, {backgroundColor: theme.colors.dynamic.background}]} contentInsetAdjustmentBehavior="automatic">
       <SafeAreaView style={styles.sectionContainer}>
-        <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.surface}]}>
+        <DataTable style={[styles.roundedList, {backgroundColor: theme.colors.dynamic.surface}]}>
           <DataTable.Row>
             <DataTable.Cell>安静時非対称</DataTable.Cell>
             <DataTable.Cell numeric>{params.ansei == 4 ? 'ほぼ正常(' + params.ansei + ')' : params.ansei == 2 ? '少し非対称(' + params.ansei + ')' : params.ansei == 0 ? 'かなり非対称(' + params.ansei + ')' : '**エラー**(' + params.ansei + ')'}</DataTable.Cell>
@@ -201,8 +201,8 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
           <Card.Title title="合計" />
           <Card.Content>
             <View style={styles.scoreSum}>
-              <Text variant="displayLarge" style={{color: theme.colors.primary}}>{paramsSum}</Text>
-              <Text variant="labelMedium" style={{color: theme.colors.secondary}}> / 40</Text>
+              <Text variant="displayLarge" style={{color: theme.colors.dynamic.primary}}>{paramsSum}</Text>
+              <Text variant="labelMedium" style={{color: theme.colors.dynamic.secondary}}> / 40</Text>
             </View>
             <ProgressBar progress={scoreBar} />
           </Card.Content>
