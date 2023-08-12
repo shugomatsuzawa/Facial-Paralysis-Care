@@ -3,7 +3,7 @@
     "name": "顔面神経麻痺ケア",
     "slug": "facial-paralysis-care",
     "owner": "shugomatsuzawa",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "githubUrl": "https://github.com/shugomatsuzawa/Facial-Paralysis-Care",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
@@ -13,9 +13,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": false,
+      "supportsTablet": true,
       "bundleIdentifier": "com.shugomatsuzawa",
-      "buildNumber": "1.0.002",
+      "buildNumber": "1.1.001",
       "splash": {
         "image": "./assets/splash.png",
         "resizeMode": "contain",
@@ -31,7 +31,7 @@
     },
     "android": {
       "package": "com.shugomatsuzawa",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": [
         "CAMERA"
       ],
