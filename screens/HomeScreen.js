@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, Platform, Appearance, Pressable } from 'react-native';
+import { StyleSheet, View, SafeAreaView, ScrollView, Platform, Appearance, Pressable, Dimensions, useWindowDimensions } from 'react-native';
 import { useTheme, Card, List, Button, Text, Badge } from 'react-native-paper';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
 import AdventureImage from '../components/AdventureImage';
@@ -32,6 +32,8 @@ const HomeScreen = ({ navigation }) => {
     const changeAppearance = Appearance.addChangeListener(reloadCalendar);
     // changeAppearance.remove();
   }
+
+  const window = useWindowDimensions();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -75,18 +77,29 @@ const HomeScreen = ({ navigation }) => {
         () => { console.warn("SELECT TABLE Failed All."); },
         () => { console.log("SELECT TABLE Success All."); }
       );
+
+      const handleDimensionsChange = () => {
+        // リロードのロジックをここに追加
+        console.debug('resized to: ', window.width)
+        navigation.replace('Home')
+        // reloadCalendar()
+      };
+      dimensionsHandler=Dimensions.addEventListener('change',handleDimensionsChange)
+      return ()=>dimensionsHandler.remove()
     }, [])
   );
 
   return (
     <ScrollView style={[styles.container, {backgroundColor: theme.colors.dynamic.background}]} contentInsetAdjustmentBehavior="automatic">
       <SafeAreaView style={{backgroundColor: theme.colors.dynamic.surface}}>
+        {useIsFocused() ?
         <CalendarList
           current={today}
           key={calendarKey}
           monthFormat={'yyyy年 M月'}
           staticHeader
           calendarHeight={400}
+          calendarWidth={window.width}
           horizontal={true}
           pagingEnabled={true}
           maxDate={today}
@@ -138,6 +151,7 @@ const HomeScreen = ({ navigation }) => {
             }
           }}
         />
+        : ''}
         <View style={styles.calendarButtons}>
           <Button onPress={reloadCalendar}>今日</Button>
           <Button onPress={() => navigation.navigate('Data')}>全てのデータを表示</Button>
