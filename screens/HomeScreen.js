@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView, Platform, Appearance, Pressable, Dimensions, useWindowDimensions } from 'react-native';
-import { useTheme, Card, List, Button, Text, Badge } from 'react-native-paper';
+import { useTheme, ActivityIndicator, Card, List, Button, Text, Badge } from 'react-native-paper';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
@@ -24,9 +24,14 @@ const HomeScreen = ({ navigation }) => {
   // console.debug(today)
 
   const [calendarKey, setCalendarKey] = useState(0);
+  const [calendarVisibility, setCalendarVisibility] = useState(true);
   const reloadCalendar = () => {
+    setCalendarVisibility(false);
     // console.debug("change Appearance: " + Appearance.getColorScheme());
-    setTimeout(() => {setCalendarKey(calendarKey + 1)},100);
+    setTimeout(() => {
+      setCalendarKey(calendarKey + 1);
+      setCalendarVisibility(true);
+    },100);
   };
   if (Platform.OS !== 'ios') {
     const changeAppearance = Appearance.addChangeListener(reloadCalendar);
@@ -81,8 +86,8 @@ const HomeScreen = ({ navigation }) => {
       const handleDimensionsChange = () => {
         // リロードのロジックをここに追加
         console.debug('resized to: ', window.width)
-        navigation.replace('Home')
-        // reloadCalendar()
+        // navigation.replace('Home')
+        reloadCalendar()
       };
       dimensionsHandler=Dimensions.addEventListener('change',handleDimensionsChange)
       return ()=>dimensionsHandler.remove()
@@ -92,7 +97,11 @@ const HomeScreen = ({ navigation }) => {
   return (
     <ScrollView style={[styles.container, {backgroundColor: theme.colors.dynamic.background}]} contentInsetAdjustmentBehavior="automatic">
       <SafeAreaView style={{backgroundColor: theme.colors.dynamic.surface}}>
-        {useIsFocused() ?
+        {useIsFocused() === false ?
+          <View style={styles.calendarLoadingContainer}>
+            <ActivityIndicator animating={true} color={theme.colors.dynamic.primary} />
+          </View>
+        : calendarVisibility ?
         <CalendarList
           current={today}
           key={calendarKey}
@@ -151,7 +160,11 @@ const HomeScreen = ({ navigation }) => {
             }
           }}
         />
-        : ''}
+        :
+          <View style={styles.calendarLoadingContainer}>
+            <ActivityIndicator animating={true} color={theme.colors.dynamic.primary} />
+          </View>
+        }
         <View style={styles.calendarButtons}>
           <Button onPress={reloadCalendar}>今日</Button>
           <Button onPress={() => navigation.navigate('Data')}>全てのデータを表示</Button>
@@ -204,6 +217,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 16,
     marginBottom: 16,
+  },
+  calendarLoadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    height: 400
   },
   roundedList: {
     borderRadius: 10,
