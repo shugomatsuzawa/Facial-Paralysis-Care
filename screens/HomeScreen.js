@@ -173,7 +173,7 @@ const HomeScreen = ({ navigation }) => {
       <SafeAreaView style={styles.sectionContainer}>
         <List.Section style={[styles.roundedList, {backgroundColor: theme.colors.dynamic.surface}]}>
           <List.Item title="今日のテスト" onPress={() => navigation.navigate('Diagnose01')} left={() => <List.Icon icon="stethoscope" color={theme.colors.dynamic.secondary} />} right={() => <List.Icon icon="chevron-right" color={theme.colors.dynamic.onSurfaceDisabled} />} style={[styles.iconList, styles.bb1, {borderBottomColor: theme.colors.dynamic.outlineVariant}]} />
-          <List.Item title="今日のトレーニング（記録なし）" onPress={() => navigation.navigate('Training01')} left={() => <List.Icon icon="dumbbell" color={theme.colors.dynamic.tertiary} />} right={() => <List.Icon icon="chevron-right" color={theme.colors.dynamic.onSurfaceDisabled} />} style={styles.iconList} />
+          <List.Item title="練習モード（記録なし）" onPress={() => navigation.navigate('Training01')} left={() => <List.Icon icon="dumbbell" color={theme.colors.dynamic.tertiary} />} right={() => <List.Icon icon="chevron-right" color={theme.colors.dynamic.onSurfaceDisabled} />} style={styles.iconList} />
         </List.Section>
         <Card onPress={() => navigation.navigate('About')} style={[styles.mt10, {backgroundColor: theme.colors.primaryContainer}]}>
           <Card.Content style={styles.mt10}>

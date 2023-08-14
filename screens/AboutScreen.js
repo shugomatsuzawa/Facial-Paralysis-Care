@@ -47,7 +47,7 @@ const AboutScreen = ({ navigation }) => {
         </SafeAreaView>
         <SafeAreaView style={styles.sectionContainer}>
           <Text variant="headlineMedium">このアプリについて</Text>
-          <Text variant="bodyMedium" style={styles.mt10}>このアプリては、日本で顔面神経麻痺の重症度の評価に使われている40点法（柳原法）³に基づきテストを行います。</Text>
+          <Text variant="bodyMedium" style={styles.mt10}>このアプリては、日本で顔面神経麻痺の重症度の評価に使われている40点法（柳原法）³を参考にテストを行っています。</Text>
           <Text variant="bodyMedium" style={styles.mt10}>この方法では、顔の筋肉の動きを次の10個のアイテムに分けて評価します。それぞれのアイテムについて、患者さんがどの程度動かすことができるかを「動く（4点）」「やや動く（2点）」「動かない（0点）」の3段階で評価し、その合計点で病気の程度を評価します。</Text>
           <Text variant="bodyMedium" style={styles.mt10}>・安静時非対象</Text>
           <Text variant="bodyMedium" style={styles.mt10}>・ひたいの皺寄せ</Text>
@@ -61,6 +61,7 @@ const AboutScreen = ({ navigation }) => {
           <Text variant="bodyMedium" style={styles.mt10}>・口をへの字に曲げる</Text>
           <Text variant="bodyMedium" style={styles.mt10}>このアプリはオープンソースです。このアプリの使用によって発生したいかなる危害や損害について責任を負いません。</Text>
           <Text variant="bodyMedium" style={styles.mt10}>医師のアドバイスに基づいてアプリを使用してください。くれぐれもアプリの結果だけを頼りに医療上の判断を行わないでください。</Text>
+          <Text variant="bodyMedium" style={styles.mt10}>アプリに表示されるスコアは、医師によるテストの結果とは異なる可能性があります。</Text>
         </SafeAreaView>
         <SafeAreaView style={styles.sectionContainer}>
           <Text variant="labelSmall">出典:</Text>
