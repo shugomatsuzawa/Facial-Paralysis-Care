@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, View } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, View, Platform } from 'react-native';
 import { useTheme, Text, List } from 'react-native-paper';
 import * as Linking from 'expo-linking';
 import * as appJson from '../app.json';

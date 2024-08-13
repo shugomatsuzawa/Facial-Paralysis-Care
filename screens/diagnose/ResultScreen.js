@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
 import { useTheme, DataTable, Button, Dialog, Portal, Text, ProgressBar, Card } from 'react-native-paper';
-import * as SQLite from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite/legacy';
 
 const DiagnoseResultScreen = ({ route, navigation }) => {
   const theme = useTheme();

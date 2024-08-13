@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useTheme, DataTable, List, Button, Dialog, Portal, Text } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-import * as SQLite from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite/legacy';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';

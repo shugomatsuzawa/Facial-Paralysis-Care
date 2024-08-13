@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView, Platform, Appearance, Pressable, Dimensions, useWindowDimensions } from 'react-native';
 import { useTheme, ActivityIndicator, Card, List, Button, Text, Badge } from 'react-native-paper';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import * as SQLite from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite/legacy';
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
 import AdventureImage from '../components/AdventureImage';
 
@@ -17,6 +17,7 @@ LocaleConfig.locales['jp'] = {
 LocaleConfig.defaultLocale = 'jp';
 
 const HomeScreen = ({ navigation }) => {
+  const window = useWindowDimensions();
   const theme = useTheme();
   const db = SQLite.openDatabase('FacialParalysisCare.db');
   const [items, setItems] = useState([]);
@@ -37,8 +38,6 @@ const HomeScreen = ({ navigation }) => {
     const changeAppearance = Appearance.addChangeListener(reloadCalendar);
     // changeAppearance.remove();
   }
-
-  const window = useWindowDimensions();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -102,64 +101,64 @@ const HomeScreen = ({ navigation }) => {
             <ActivityIndicator animating={true} color={theme.colors.dynamic.primary} />
           </View>
         : calendarVisibility ?
-        <CalendarList
-          current={today}
-          key={calendarKey}
-          monthFormat={'yyyy年 M月'}
-          staticHeader
-          calendarHeight={400}
-          calendarWidth={window.width}
-          horizontal={true}
-          pagingEnabled={true}
-          maxDate={today}
-          style = {{ backgroundColor: theme.colors.dynamic.surface }}
-          dayComponent={({date, state}) => {
-            const item = items.find((v) => v.date_string === date.dateString);
-            if (item) {
-              return (
-                <Pressable onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={styles.calendarDayInner}>
-                  <Text style={state === 'disabled' ? {color: theme.colors.dynamic.onSurfaceDisabled} : ''}>{date.day}</Text>
-                  <Badge style={[styles.calendarDayBadge, item.score >= 40 ? {backgroundColor: theme.colors.badgeGold, color: theme.colors.dynamic.onBadgeGold} : item.score >= 20 ? {backgroundColor: theme.colors.badgeSilver, color: theme.colors.dynamic.onBadgeSilver} : {backgroundColor: theme.colors.dynamic.primary, color: theme.colors.dynamic.onPrimary}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.dynamic.onSurface}] : '']}>{JSON.stringify(item.score)}</Badge>
-                  {/* <Text>{JSON.stringify(state)}</Text> */}
-                </Pressable>
-              );
-            } else {
-              return (
-                <View style={styles.calendarDayInner}>
-                  <Text style={state === 'disabled' ? {color: theme.colors.dynamic.onSurfaceDisabled} : ''}>{date.day}</Text>
-                  <Badge style={[styles.calendarDayBadge, {backgroundColor: theme.colors.dynamic.surfaceDisabled}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.dynamic.onSurface}] : '']} />
-                  {/* <Text>{JSON.stringify(state)}</Text> */}
-                </View>
-              );
-            }
-          }}
-          theme={{
-            calendarBackground: theme.colors.dynamic.surface,
-            textSectionTitleColor: theme.colors.dynamic.onSurface,
-            textSectionTitleDisabledColor: theme.colors.dynamic.onSurfaceDisabled,
-            monthTextColor: theme.colors.dynamic.onSurface,
-            arrowColor: theme.colors.dynamic.primary,
-            'stylesheet.calendar.header': {
-              week: {
-                marginTop: 16,
-                marginBottom: 10,
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                borderBottomWidth: 1,
-                borderBottomColor: theme.colors.dynamic.outlineVariant,
+          <CalendarList
+            current={today}
+            key={calendarKey}
+            monthFormat={'yyyy年 M月'}
+            staticHeader
+            calendarHeight={400}
+            calendarWidth={window.width}
+            horizontal={true}
+            pagingEnabled={true}
+            maxDate={today}
+            style = {{ backgroundColor: theme.colors.dynamic.surface }}
+            dayComponent={({date, state}) => {
+              const item = items.find((v) => v.date_string === date.dateString);
+              if (item) {
+                return (
+                  <Pressable onPress={() => navigation.navigate('DataDetail',{ id: item.id, })} style={styles.calendarDayInner}>
+                    <Text style={state === 'disabled' ? {color: theme.colors.dynamic.onSurfaceDisabled} : ''}>{date.day}</Text>
+                    <Badge style={[styles.calendarDayBadge, item.score >= 40 ? {backgroundColor: theme.colors.badgeGold, color: theme.colors.dynamic.onBadgeGold} : item.score >= 20 ? {backgroundColor: theme.colors.badgeSilver, color: theme.colors.dynamic.onBadgeSilver} : {backgroundColor: theme.colors.dynamic.primary, color: theme.colors.dynamic.onPrimary}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.dynamic.onSurface}] : '']}>{JSON.stringify(item.score)}</Badge>
+                    {/* <Text>{JSON.stringify(state)}</Text> */}
+                  </Pressable>
+                );
+              } else {
+                return (
+                  <View style={styles.calendarDayInner}>
+                    <Text style={state === 'disabled' ? {color: theme.colors.dynamic.onSurfaceDisabled} : ''}>{date.day}</Text>
+                    <Badge style={[styles.calendarDayBadge, {backgroundColor: theme.colors.dynamic.surfaceDisabled}, state === 'today' ? [styles.calendarDayBadgeBorder, {borderColor: theme.colors.dynamic.onSurface}] : '']} />
+                    {/* <Text>{JSON.stringify(state)}</Text> */}
+                  </View>
+                );
               }
-            },
-            'stylesheet.calendar.main': {
-              dayContainer: {
-                flex: 1,
-                alignItems: 'center',
+            }}
+            theme={{
+              calendarBackground: theme.colors.dynamic.surface,
+              textSectionTitleColor: theme.colors.dynamic.onSurface,
+              textSectionTitleDisabledColor: theme.colors.dynamic.onSurfaceDisabled,
+              monthTextColor: theme.colors.dynamic.onSurface,
+              arrowColor: theme.colors.dynamic.primary,
+              'stylesheet.calendar.header': {
+                week: {
+                  marginTop: 16,
+                  marginBottom: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                  borderBottomWidth: 1,
+                  borderBottomColor: theme.colors.dynamic.outlineVariant,
+                }
               },
-              emptyDayContainer: {
-                flex: 1,
-              },
-            }
-          }}
-        />
+              'stylesheet.calendar.main': {
+                dayContainer: {
+                  flex: 1,
+                  alignItems: 'center',
+                },
+                emptyDayContainer: {
+                  flex: 1,
+                },
+              }
+            }}
+          />
         :
           <View style={styles.calendarLoadingContainer}>
             <ActivityIndicator animating={true} color={theme.colors.dynamic.primary} />

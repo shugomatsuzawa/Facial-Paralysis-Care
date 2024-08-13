@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState, useRef } from 'react';
 import { View, SafeAreaView, Image, Pressable } from 'react-native';
 import { useTheme, Button, IconButton, Text } from 'react-native-paper';
-import { Camera, CameraType } from 'expo-camera';
+import { Camera, CameraType } from 'expo-camera/legacy';
 import styles from '../../components/DiagnoseStyle';
 
 const Diagnose06Screen = ({ route, navigation }) => {
