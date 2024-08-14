@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.shugomatsuzawa",
-      "buildNumber": "1.1.003",
+      "buildNumber": "1.1.004",
       "requireFullScreen": true,
       "splash": {
         "image": "./assets/splash.png",
@@ -27,11 +27,14 @@
       },
       "infoPlist": {
         "CFBundleLocalizations" : ["ja"],
-        "CFBundleDevelopmentRegion" : "ja"
+        "CFBundleDevelopmentRegion" : "ja",
+        "UIRequiredDeviceCapabilities": [
+          "front-facing-camera"
+        ]
       }
     },
     "android": {
-      "package": "com.shugomatsuzawa",
+      "package": "com.shugomatsuzawa.FacialParalysisCare",
       "versionCode": 6,
       "permissions": [
         "CAMERA"
