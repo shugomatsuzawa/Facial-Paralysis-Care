@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.shugomatsuzawa",
-      "buildNumber": "1.1.004",
+      "buildNumber": "1.1.005",
       "requireFullScreen": true,
       "splash": {
         "image": "./assets/splash.png",

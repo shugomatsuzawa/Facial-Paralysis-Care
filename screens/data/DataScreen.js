@@ -108,9 +108,9 @@ const DataScreen = ({ navigation }) => {
   }
 
   const importFile = async () => {
-    const { type, uri } = await DocumentPicker.getDocumentAsync({type: 'application/json'});
-    if (type === 'success') {
-      const fileUri = uri;
+    const { assets, canceled } = await DocumentPicker.getDocumentAsync({multiple: false, type: 'application/json'});
+    if (canceled === false) {
+      const fileUri = assets[0].uri;
       console.debug(fileUri);
       const txtFileRaw = await FileSystem.readAsStringAsync(fileUri);
       try{
