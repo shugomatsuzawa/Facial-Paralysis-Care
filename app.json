@@ -17,6 +17,7 @@
       "bundleIdentifier": "com.shugomatsuzawa",
       "buildNumber": "1.1.005",
       "requireFullScreen": true,
+      "icon": "./assets/facial-paralysis-care.icon",
       "splash": {
         "image": "./assets/splash.png",
         "resizeMode": "contain",
