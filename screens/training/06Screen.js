@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { View, SafeAreaView, Image, Pressable } from 'react-native';
 import { useTheme, Button, IconButton, Text } from 'react-native-paper';
-import { Camera, CameraType } from 'expo-camera/legacy';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import styles from '../../components/DiagnoseStyle';
 
 const Training06Screen = ({ navigation }) => {
@@ -10,23 +10,16 @@ const Training06Screen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const cameraRef = useRef();
+  const [permission, requestPermission] = useCameraPermissions();
 
   const getPermission = async () => {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    setHasPermission(status === 'granted');
+    const result = await requestPermission();
+    setHasPermission(result?.granted === true);
   };
 
-  const pauseCamera = async () => {
+  const pauseCamera = () => {
     setIsPaused(prevState => !prevState);
-    console.log('isPaused is', isPaused);
-    if (isPaused) {
-      console.log('isPaused')
-      await cameraRef.current.resumePreview();
-    } else {
-      console.log('!isPaused')
-      await cameraRef.current.pausePreview();
-    }
+    console.log('isPaused is', !isPaused);
   };
 
   const openCamera = () => {
@@ -54,7 +47,7 @@ const Training06Screen = ({ navigation }) => {
           </View>
         ) : isCameraOpen ? (
           <Pressable onPress={pauseCamera}>
-            <Camera type={CameraType.front} ref={cameraRef} style={styles.camera} />
+            <CameraView facing="front" isActive={!isPaused} style={styles.camera} />
             <Text style={styles.cameraPauseText}>{isPaused ? '映像をタップして再開' : '映像をタップして一時停止'}</Text>
           </Pressable>
         ) : (
