@@ -4,6 +4,7 @@ import { MD3LightTheme, MD3DarkTheme, adaptNavigationTheme, Provider as PaperPro
 import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme, } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as NavigationBar from 'expo-navigation-bar';
+import { SQLiteProvider } from 'expo-sqlite';
 
 import HomeScreen from './screens/HomeScreen';
 import AboutScreen from './screens/AboutScreen';
@@ -397,39 +398,41 @@ export default function App() {
 
   return (
     <PaperProvider theme={theme}>
-      <NavigationContainer theme={theme}>
-        <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} options={{ title: '概要', headerLargeTitle: true }} />
-          <Stack.Screen name="About" component={AboutScreen} options={{ title: 'はじめに' }} />
-          <Stack.Screen name="Acknowledgements" component={AcknowledgementsScreen} options={{ title: '謝辞' }} />
-          <Stack.Screen name="WebView" component={WebViewScreen} options={{ title: '' }} />
-          <Stack.Screen name="Diagnose01" component={Diagnose01Screen} options={{ title: '安静時非対称' }} />
-          <Stack.Screen name="Diagnose02" component={Diagnose02Screen} options={{ title: '額のしわ寄せ' }} />
-          <Stack.Screen name="Diagnose03" component={Diagnose03Screen} options={{ title: '軽い閉眼' }} />
-          <Stack.Screen name="Diagnose04" component={Diagnose04Screen} options={{ title: '強い閉眼' }} />
-          <Stack.Screen name="Diagnose05" component={Diagnose05Screen} options={{ title: '片目つぶり' }} />
-          <Stack.Screen name="Diagnose06" component={Diagnose06Screen} options={{ title: '鼻翼を動かす' }} />
-          <Stack.Screen name="Diagnose07" component={Diagnose07Screen} options={{ title: '頬を膨らます' }} />
-          <Stack.Screen name="Diagnose08" component={Diagnose08Screen} options={{ title: 'イーと歯を見せる' }} />
-          <Stack.Screen name="Diagnose09" component={Diagnose09Screen} options={{ title: '口笛' }} />
-          <Stack.Screen name="Diagnose10" component={Diagnose10Screen} options={{ title: '口をへの字に曲げる' }} />
-          <Stack.Screen name="DiagnoseResult" component={DiagnoseResultScreen} options={{ title: '結果' }} />
-          <Stack.Screen name="DiagnoseCongratulation" component={DiagnoseCongratulationScreen} options={{ title: 'おめでとう', headerShown: false, gestureEnabled: false }} />
-          <Stack.Screen name="Training01" component={Training01Screen} options={{ title: '安静時非対称' }} />
-          <Stack.Screen name="Training02" component={Training02Screen} options={{ title: '額のしわ寄せ' }} />
-          <Stack.Screen name="Training03" component={Training03Screen} options={{ title: '軽い閉眼' }} />
-          <Stack.Screen name="Training04" component={Training04Screen} options={{ title: '強い閉眼' }} />
-          <Stack.Screen name="Training05" component={Training05Screen} options={{ title: '片目つぶり' }} />
-          <Stack.Screen name="Training06" component={Training06Screen} options={{ title: '鼻翼を動かす' }} />
-          <Stack.Screen name="Training07" component={Training07Screen} options={{ title: '頬を膨らます' }} />
-          <Stack.Screen name="Training08" component={Training08Screen} options={{ title: 'イーと歯を見せる' }} />
-          <Stack.Screen name="Training09" component={Training09Screen} options={{ title: '口笛' }} />
-          <Stack.Screen name="Training10" component={Training10Screen} options={{ title: '口をへの字に曲げる' }} />
-          <Stack.Screen name="TrainingComplete" component={TrainingCompleteScreen} options={{ title: '完了', headerBackVisible: false, gestureEnabled: false }} />
-          <Stack.Screen name="Data" component={DataScreen} options={{ title: '全ての記録データ' }} />
-          <Stack.Screen name="DataDetail" component={DataDetailScreen} options={{ title: '詳細' }} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <SQLiteProvider databaseName="FacialParalysisCare.db">
+        <NavigationContainer theme={theme}>
+          <Stack.Navigator>
+            <Stack.Screen name="Home" component={HomeScreen} options={{ title: '概要', headerLargeTitle: true }} />
+            <Stack.Screen name="About" component={AboutScreen} options={{ title: 'はじめに' }} />
+            <Stack.Screen name="Acknowledgements" component={AcknowledgementsScreen} options={{ title: '謝辞' }} />
+            <Stack.Screen name="WebView" component={WebViewScreen} options={{ title: '' }} />
+            <Stack.Screen name="Diagnose01" component={Diagnose01Screen} options={{ title: '安静時非対称' }} />
+            <Stack.Screen name="Diagnose02" component={Diagnose02Screen} options={{ title: '額のしわ寄せ' }} />
+            <Stack.Screen name="Diagnose03" component={Diagnose03Screen} options={{ title: '軽い閉眼' }} />
+            <Stack.Screen name="Diagnose04" component={Diagnose04Screen} options={{ title: '強い閉眼' }} />
+            <Stack.Screen name="Diagnose05" component={Diagnose05Screen} options={{ title: '片目つぶり' }} />
+            <Stack.Screen name="Diagnose06" component={Diagnose06Screen} options={{ title: '鼻翼を動かす' }} />
+            <Stack.Screen name="Diagnose07" component={Diagnose07Screen} options={{ title: '頬を膨らます' }} />
+            <Stack.Screen name="Diagnose08" component={Diagnose08Screen} options={{ title: 'イーと歯を見せる' }} />
+            <Stack.Screen name="Diagnose09" component={Diagnose09Screen} options={{ title: '口笛' }} />
+            <Stack.Screen name="Diagnose10" component={Diagnose10Screen} options={{ title: '口をへの字に曲げる' }} />
+            <Stack.Screen name="DiagnoseResult" component={DiagnoseResultScreen} options={{ title: '結果' }} />
+            <Stack.Screen name="DiagnoseCongratulation" component={DiagnoseCongratulationScreen} options={{ title: 'おめでとう', headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="Training01" component={Training01Screen} options={{ title: '安静時非対称' }} />
+            <Stack.Screen name="Training02" component={Training02Screen} options={{ title: '額のしわ寄せ' }} />
+            <Stack.Screen name="Training03" component={Training03Screen} options={{ title: '軽い閉眼' }} />
+            <Stack.Screen name="Training04" component={Training04Screen} options={{ title: '強い閉眼' }} />
+            <Stack.Screen name="Training05" component={Training05Screen} options={{ title: '片目つぶり' }} />
+            <Stack.Screen name="Training06" component={Training06Screen} options={{ title: '鼻翼を動かす' }} />
+            <Stack.Screen name="Training07" component={Training07Screen} options={{ title: '頬を膨らます' }} />
+            <Stack.Screen name="Training08" component={Training08Screen} options={{ title: 'イーと歯を見せる' }} />
+            <Stack.Screen name="Training09" component={Training09Screen} options={{ title: '口笛' }} />
+            <Stack.Screen name="Training10" component={Training10Screen} options={{ title: '口をへの字に曲げる' }} />
+            <Stack.Screen name="TrainingComplete" component={TrainingCompleteScreen} options={{ title: '完了', headerBackVisible: false, gestureEnabled: false }} />
+            <Stack.Screen name="Data" component={DataScreen} options={{ title: '全ての記録データ' }} />
+            <Stack.Screen name="DataDetail" component={DataDetailScreen} options={{ title: '詳細' }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SQLiteProvider>
     </PaperProvider>
   );
 }

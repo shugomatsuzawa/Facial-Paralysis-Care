@@ -3,14 +3,14 @@ import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useTheme, DataTable, List, Button, Dialog, Portal, Text } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-import * as SQLite from 'expo-sqlite/legacy';
-import * as FileSystem from 'expo-file-system';
+import { useSQLiteContext, deleteDatabaseAsync } from 'expo-sqlite';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 
 const DataScreen = ({ navigation }) => {
   const theme = useTheme();
-  const db = SQLite.openDatabase('FacialParalysisCare.db');
+  const db = useSQLiteContext();
   const [items, setItems] = useState([]);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
@@ -19,35 +19,25 @@ const DataScreen = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      db.transaction((tx) => {
+      (async () => {
+        try {
           // 実行したいSQL
-          tx.executeSql(
-            "SELECT \
-              rowid AS id, \
-              strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date, \
-              ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS score \
-            FROM \
-              health_data \
-            ORDER BY \
-              created_at DESC \
-            ;",
-            [],
-            (_, resultSet) => {
-              // 成功時のコールバック
-              console.log("SELECT TABLE Success.");
-              // console.log("select result:" + JSON.stringify(resultSet.rows._array));
-              setItems(resultSet.rows._array);
-            },
-            (_, error) => {
-              // 失敗時のコールバック
-              console.warn(error);
-              setItems([]);
-              return false;  // return true でロールバックする
-          });
-        },
-        () => { console.warn("SELECT TABLE Failed All."); },
-        () => { console.log("SELECT TABLE Success All."); }
-      );
+          const rows = await db.getAllAsync(`
+            SELECT
+              rowid AS id,
+              strftime('%m月%d日 %H:%M', created_at, 'unixepoch', 'localtime') AS date,
+              ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS score
+            FROM
+              health_data
+            ORDER BY
+              created_at DESC;
+          `, []);
+          setItems(rows);
+        } catch (error) {
+          console.warn(error);
+          setItems([]);
+        }
+      })();
     }, [])
   );
 
@@ -55,56 +45,47 @@ const DataScreen = ({ navigation }) => {
   const closeDeleteDialog = () => setIsDeleteDialogOpen(false);
   const openErrorDialog = () => setIsErrorDialogOpen(true);
   const closeErrorDialog = () => setIsErrorDialogOpen(false);
-  const deleteDatabase = () => {
-    if ( !db.closeAsync() ){
-      console.error("closeAsync Failed.");
-      closeDeleteDialog();
-      openErrorDialog();
-    } else if ( !db.deleteAsync() ) {
-      console.error("deleteAsync Failed.");
-      closeDeleteDialog();
-      openErrorDialog();
-    } else if ( db.deleteAsync() ) {
+  const deleteDatabase = async () => {
+    try {
+      await db.closeAsync();
+    } catch (e) {
+      console.warn('closeAsync Failed.', e);
+    }
+    try {
+      await deleteDatabaseAsync('FacialParalysisCare.db');
       closeDeleteDialog();
       navigation.popToTop();
+    } catch (e) {
+      console.error('deleteDatabaseAsync Failed.', e);
+      closeDeleteDialog();
+      openErrorDialog();
     }
   }
 
   const today = new Date().toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).split(/\/| |:/).join("-");
   // console.debug(today);
   const exportFile = () => {
-    db.transaction((tx) => {
+    (async () => {
+      try {
         // 実行したいSQL
-        tx.executeSql(
-          "SELECT \
-            * \
-          FROM \
-            health_data \
-          ;",
-          [],
-          (_, resultSet) => {
-            // 成功時のコールバック
-            console.log("SELECT TABLE Success.");
-            // console.debug("select result:" + JSON.stringify(resultSet.rows._array));
-            (async () => {
-            let fileName = "FacialParalysisCare_" + String(today);
-            let fileUri = FileSystem.cacheDirectory + fileName + ".json";
-            let txtFile = JSON.stringify(resultSet.rows._array);
-            await FileSystem.writeAsStringAsync(fileUri, txtFile, { encoding: FileSystem.EncodingType.UTF8 });
-            await Sharing.shareAsync(fileUri, {mimeType: 'application/json'});
-            await FileSystem.deleteAsync(fileUri);
-            })();
-          },
-          (_, error) => {
-            // 失敗時のコールバック
-            console.error(error);
-            setItems([]);
-            return false;  // return true でロールバックする
-        });
-      },
-      () => { console.error("Export Table Failed All."); },
-      () => { console.log("Export Table Success All."); }
-    );
+        const rows = await db.getAllAsync(`
+          SELECT
+            *
+          FROM
+            health_data;
+        `, []);
+        let fileName = "FacialParalysisCare_" + String(today);
+        let fileUri = FileSystem.cacheDirectory + fileName + ".json";
+        let txtFile = JSON.stringify(rows);
+        await FileSystem.writeAsStringAsync(fileUri, txtFile, { encoding: FileSystem.EncodingType.UTF8 });
+        await Sharing.shareAsync(fileUri, {mimeType: 'application/json'});
+        await FileSystem.deleteAsync(fileUri);
+        console.log('Export Table Success All.');
+      } catch (error) {
+        console.error(error);
+        setItems([]);
+      }
+    })();
   }
 
   const importFile = async () => {
@@ -116,85 +97,67 @@ const DataScreen = ({ navigation }) => {
       try{
         const txtFile = JSON.parse(txtFileRaw);
 
-        db.transaction((tx) => {
-            // 実行したいSQL
-            tx.executeSql(
-              "CREATE TABLE IF NOT EXISTS health_data( \
-                created_at INTEGER UNIQUE NOT NULL DEFAULT (strftime('%s','now')), \
-                ansei INTEGER, \
-                hitai INTEGER, \
-                karui_heigan INTEGER, \
-                tsuyoi_heigan INTEGER, \
-                katame INTEGER, \
-                biyoku INTEGER, \
-                hoho INTEGER, \
-                eee INTEGER, \
-                kuchibue INTEGER, \
-                henoji INTEGER \
-              );",
-              null,
-              () => {
-                // 成功時のコールバック
-                console.log("CREATE TABLE Success.");
-              },
-              (_, error) => {
-                // 失敗時のコールバック
-                console.error(error);
-                return true;  // return true でロールバックする
-            });
-
-            txtFile.map((item) => {
-              // console.debug(item);
-              tx.executeSql(
-                "INSERT INTO health_data( \
-                  created_at, \
-                  ansei, \
-                  hitai, \
-                  karui_heigan, \
-                  tsuyoi_heigan, \
-                  katame, \
-                  biyoku, \
-                  hoho, \
-                  eee, \
-                  kuchibue, \
-                  henoji \
-                ) \
-                VALUES( \
-                  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? \
-                ) \
-                ON CONFLICT( \
-                  created_at \
-                ) \
-                DO NOTHING \
-                ;",
-                [
-                  item.created_at,
-                  item.ansei,
-                  item.hitai,
-                  item.karui_heigan,
-                  item.tsuyoi_heigan,
-                  item.katame,
-                  item.biyoku,
-                  item.hoho,
-                  item.eee,
-                  item.kuchibue,
-                  item.henoji
-                ],
-                () => {
-                  console.log("INSERT TABLE Success.");
-                  navigation.replace('Data');
-                },
-                (_, error) => {
-                  // 失敗時のコールバック
-                  console.error(error);
-                  openErrorDialog();
-                  return true;  // return true でロールバックする
-              });
-            })
-          },
-          () => { console.error("Import Table Failed All."); },
-          () => { console.log("Import Table Success All."); }
-        );
+        try {
+          // 実行したいSQL
+          await db.execAsync(`
+            CREATE TABLE IF NOT EXISTS health_data(
+              created_at INTEGER UNIQUE NOT NULL DEFAULT (strftime('%s','now')),
+              ansei INTEGER,
+              hitai INTEGER,
+              karui_heigan INTEGER,
+              tsuyoi_heigan INTEGER,
+              katame INTEGER,
+              biyoku INTEGER,
+              hoho INTEGER,
+              eee INTEGER,
+              kuchibue INTEGER,
+              henoji INTEGER
+            );
+          `);
+          await db.withTransactionAsync(async () => {
+            for (const item of txtFile) {
+              await db.runAsync(`
+                INSERT INTO health_data(
+                  created_at,
+                  ansei,
+                  hitai,
+                  karui_heigan,
+                  tsuyoi_heigan,
+                  katame,
+                  biyoku,
+                  hoho,
+                  eee,
+                  kuchibue,
+                  henoji
+                )
+                VALUES(
+                  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                )
+                ON CONFLICT(
+                  created_at
+                )
+                DO NOTHING;
+              `, [
+                item.created_at,
+                item.ansei,
+                item.hitai,
+                item.karui_heigan,
+                item.tsuyoi_heigan,
+                item.katame,
+                item.biyoku,
+                item.hoho,
+                item.eee,
+                item.kuchibue,
+                item.henoji,
+              ]);
+            }
+          });
+          console.log('Import Table Success All.');
+          navigation.replace('Data');
+        } catch (error) {
+          console.error('Import Table Failed All.', error);
+          openErrorDialog();
+        }
       }catch(e){
         console.error(e);
         setErrorDescription('選択したファイルに問題がある可能性があります。');

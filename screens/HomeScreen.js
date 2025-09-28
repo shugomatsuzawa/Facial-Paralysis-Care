@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView, Platform, Appearance, Pressable, Dimensions, useWindowDimensions } from 'react-native';
 import { useTheme, ActivityIndicator, Card, List, Button, Text, Badge } from 'react-native-paper';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import * as SQLite from 'expo-sqlite/legacy';
+import { useSQLiteContext } from 'expo-sqlite';
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
 import AdventureImage from '../components/AdventureImage';
 
@@ -19,7 +19,7 @@ LocaleConfig.defaultLocale = 'jp';
 const HomeScreen = ({ navigation }) => {
   const window = useWindowDimensions();
   const theme = useTheme();
-  const db = SQLite.openDatabase('FacialParalysisCare.db');
+  const db = useSQLiteContext();
   const [items, setItems] = useState([]);
   const today = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit",}).split("/").join("-");
   // console.debug(today)
@@ -41,46 +41,34 @@ const HomeScreen = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      db.transaction((tx) => {
+      (async () => {
+        try {
           // 実行したいSQL
-          tx.executeSql(
-            "SELECT \
-              * \
-            FROM \
-              ( \
-                SELECT \
-                  rowid AS id, \
-                  strftime('%Y-%m-%d', created_at, 'unixepoch', 'localtime') AS date_string, \
-                  ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS score, \
-                  row_number() over ( \
-                    PARTITION BY \
-                      date(created_at, 'unixepoch', 'localtime') \
-                    ORDER BY \
-                      ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji DESC \
-                  ) date_id \
-                FROM \
-                  health_data \
-              ) with_date_id \
-            WHERE \
-              date_id = 1 \
-            ;",
-            [],
-            (_, resultSet) => {
-              // 成功時のコールバック
-              console.log("SELECT TABLE Success.");
-              // console.debug("select result:" + JSON.stringify(resultSet.rows._array));
-              setItems(resultSet.rows._array);
-            },
-            () => {
-              // 失敗時のコールバック
-              console.warn("SELECT TABLE Failed.");
-              setItems([]);
-              return false;  // return true でロールバックする
-          });
-        },
-        () => { console.warn("SELECT TABLE Failed All."); },
-        () => { console.log("SELECT TABLE Success All."); }
-      );
+          const rows = await db.getAllAsync(`
+            SELECT
+              *
+            FROM
+              (
+                SELECT
+                  rowid AS id,
+                  strftime('%Y-%m-%d', created_at, 'unixepoch', 'localtime') AS date_string,
+                  ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS score,
+                  row_number() over (
+                    PARTITION BY date(created_at, 'unixepoch', 'localtime')
+                    ORDER BY ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji DESC
+                  ) date_id
+                FROM
+                health_data
+              ) with_date_id
+            WHERE
+              date_id = 1;
+          `, []);
+          setItems(rows);
+        } catch (e) {
+          console.warn('SELECT TABLE Failed.', e);
+          setItems([]);
+        }
+      })();
 
       const handleDimensionsChange = () => {
         // リロードのロジックをここに追加
@@ -88,8 +76,8 @@ const HomeScreen = ({ navigation }) => {
         // navigation.replace('Home')
         reloadCalendar()
       };
-      dimensionsHandler=Dimensions.addEventListener('change',handleDimensionsChange)
-      return ()=>dimensionsHandler.remove()
+      const dimensionsHandler = Dimensions.addEventListener('change', handleDimensionsChange);
+      return () => dimensionsHandler.remove();
     }, [])
   );
 

@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useTheme, DataTable, List, Button, Dialog, Portal, Text } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-import * as SQLite from 'expo-sqlite/legacy';
+import { useSQLiteContext } from 'expo-sqlite';
 
 const DetailScreen = ({ route, navigation }) => {
   const theme = useTheme();
-  const db = SQLite.openDatabase('FacialParalysisCare.db');
+  const db = useSQLiteContext();
   const [items, setItems] = useState([]);
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
   const [errorTitle, setErrorTitle] = useState('操作を完了できませんでした');
@@ -16,76 +16,60 @@ const DetailScreen = ({ route, navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      db.transaction((tx) => {
+      (async () => {
+        try {
           // 実行したいSQL
-          tx.executeSql(
-            "SELECT \
-              rowid AS id, \
-              strftime('%Y/%m/%d %H:%M:%S', created_at, 'unixepoch', 'localtime') AS date, \
-              ansei, \
-              hitai, \
-              karui_heigan, \
-              tsuyoi_heigan, \
-              katame, \
-              biyoku, \
-              hoho, \
-              eee, \
-              kuchibue, \
-              henoji, \
-              ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS sum \
-            FROM \
-              health_data \
-            WHERE \
-              rowid = ?\
-            ;",
-            [params.id],
-            (_, resultSet) => {
-              // 成功時のコールバック
-              console.log("SELECT TABLE Success.");
-              // console.debug("select result:" + JSON.stringify(resultSet.rows._array[0]));
-              setItems(resultSet.rows._array[0]);
-            },
-            () => {
-              // 失敗時のコールバック
-              console.error("SELECT TABLE Failed.");
-              openErrorDialog();
-              setItems([]);
-              return false;  // return true でロールバックする
-          });
-        },
-        () => { console.error("SELECT TABLE Failed All."); },
-        () => { console.log("SELECT TABLE Success All."); }
-      );
+          const row = await db.getFirstAsync(`
+            SELECT
+              rowid AS id,
+              strftime('%Y/%m/%d %H:%M:%S', created_at, 'unixepoch', 'localtime') AS date,
+              ansei,
+              hitai,
+              karui_heigan,
+              tsuyoi_heigan,
+              katame,
+              biyoku,
+              hoho,
+              eee,
+              kuchibue,
+              henoji,
+              ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji AS sum
+            FROM
+              health_data
+            WHERE
+              rowid = ?;
+          `, [params.id]);
+          if (row) {
+            setItems(row);
+          } else {
+            setItems([]);
+          }
+        } catch (e) {
+          console.error('SELECT TABLE Failed.', e);
+          openErrorDialog();
+          setItems([]);
+        }
+      })();
     }, [])
   );
 
   const openErrorDialog = () => setIsErrorDialogOpen(true);
   const closeErrorDialog = () => setIsErrorDialogOpen(false);
-  const deleteData = () => {
-    db.transaction((tx) => {
-        // 実行したいSQL
-        tx.executeSql(
-          "DELETE FROM \
-            health_data \
-          WHERE \
-            rowid = ?\
-          ;",
-          [params.id],
-          () => {
-            // 成功時のコールバック
-            console.log("DELETE success");
-            navigation.goBack();
-          },
-          () => {
-            // 失敗時のコールバック
-            console.error("DELETE Failed.");
-            openErrorDialog();
-            return true;  // return true でロールバックする
-        });
-      },
-      () => { console.error("deleteData Failed All."); },
-      () => { console.log("deleteData Success All."); }
-    );
+  const deleteData = async () => {
+    try {
+      // 実行したいSQL
+      await db.runAsync(`
+        DELETE FROM
+          health_data
+        WHERE
+          rowid = ?;
+      `, [params.id]);
+      console.log('DELETE success');
+      navigation.goBack();
+    } catch (e) {
+      console.error('DELETE Failed.', e);
+      openErrorDialog();
+    }
   }
 
   return (

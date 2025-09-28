@@ -2,13 +2,13 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
 import { useTheme, DataTable, Button, Dialog, Portal, Text, ProgressBar, Card } from 'react-native-paper';
-import * as SQLite from 'expo-sqlite/legacy';
+import { useSQLiteContext } from 'expo-sqlite';
 
 const DiagnoseResultScreen = ({ route, navigation }) => {
   const theme = useTheme();
   const params = route.params
   // console.debug(params);
-  const db = SQLite.openDatabase('FacialParalysisCare.db');
+  const db = useSQLiteContext();
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
   const openErrorDialog = () => setIsErrorDialogOpen(true);
   const closeErrorDialog = () => setIsErrorDialogOpen(false);
@@ -30,126 +30,97 @@ const DiagnoseResultScreen = ({ route, navigation }) => {
   const paramsSum = paramsArray.reduce((accumulator, current) => accumulator + current);
   const scoreBar = paramsSum / 40;
 
-  const saveData = () => {
-    db.transaction((tx) => {
-        // 実行したいSQL
-        tx.executeSql(
-          "CREATE TABLE IF NOT EXISTS health_data( \
-            created_at INTEGER UNIQUE NOT NULL DEFAULT (strftime('%s','now')), \
-            ansei INTEGER, \
-            hitai INTEGER, \
-            karui_heigan INTEGER, \
-            tsuyoi_heigan INTEGER, \
-            katame INTEGER, \
-            biyoku INTEGER, \
-            hoho INTEGER, \
-            eee INTEGER, \
-            kuchibue INTEGER, \
-            henoji INTEGER \
-          );",
-          null,
-          () => {
-            // 成功時のコールバック
-            console.log("CREATE TABLE Success.");
-          },
-          () => {
-            // 失敗時のコールバック
-            console.error("CREATE TABLE Failed.");
-            return true;  // return true でロールバックする
-        });
-
-        tx.executeSql(
-          "INSERT INTO health_data( \
-            ansei, \
-            hitai, \
-            karui_heigan, \
-            tsuyoi_heigan, \
-            katame, \
-            biyoku, \
-            hoho, \
-            eee, \
-            kuchibue, \
-            henoji \
-          ) \
-          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-          paramsArray,
-          () => {
-            console.log("INSERT TABLE Success.");
-            if (paramsSum >= 20) {
-              db.transaction((tx) => {
-                  tx.executeSql(
-                    "SELECT \
-                      ( \
-                        SELECT \
-                        COUNT(rowid) \
-                        FROM \
-                          health_data \
-                        LIMIT \
-                          2 \
-                      ) AS has_data, \
-                      ( \
-                        SELECT \
-                        COUNT(rowid) \
-                        FROM \
-                          health_data \
-                        WHERE \
-                          ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji >= 40 \
-                        LIMIT \
-                          2 \
-                      ) AS has_40, \
-                      ( \
-                        SELECT \
-                        COUNT(rowid) \
-                        FROM \
-                          health_data \
-                        WHERE \
-                          ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji >= 20 \
-                        LIMIT \
-                          2 \
-                      ) AS has_20 \
-                    ;",
-                    [],
-                    (_, resultSet) => {
-                      // 成功時のコールバック
-                      // console.debug("resultSet:" + JSON.stringify(resultSet.rows._array));
-                      const hasData = resultSet.rows._array[0].has_data;
-                      const has40 = resultSet.rows._array[0].has_40;
-                      const has20 = resultSet.rows._array[0].has_20;
-                      console.log("SELECT TABLE Success. (hasData:" + hasData + ", has40:" + has40 + ", has20:" + has20 + ")");
-                      if (hasData > 1 && has40 <= 1 && paramsSum >= 40) {
-                        navigation.navigate('DiagnoseCongratulation', { isFirst: '40' });
-                      } else if (hasData > 1 && has20 <= 1 && paramsSum >= 20) {
-                        console.log("Is First 20");
-                        navigation.navigate('DiagnoseCongratulation', { isFirst: '20' });
-                      } else {
-                        console.log("Is Else");
-                        navigation.popToTop();
-                      }
-                    },
-                    () => {
-                      // 失敗時のコールバック
-                      console.error("SELECT TABLE Failed.");
-                      return false;  // return true でロールバックする
-                  });
-                },
-                () => { console.error("SELECT TABLE Failed All."); },
-                () => { console.log("SELECT TABLE Success All."); }
-              );
-            } else {
-              console.log("Is Not paramsSum >= 20");
-              navigation.popToTop();
-            }
-          },
-          () => {
-            // 失敗時のコールバック
-            console.error("INSERT TABLE Failed.");
-            openErrorDialog();
-            return true;  // return true でロールバックする
-        });
-      },
-      () => { console.error("saveData Failed All."); },
-      () => { console.log("saveData Success All."); }
-    );
+  const saveData = async () => {
+    try {
+      // 実行したいSQL
+      await db.execAsync(`
+        CREATE TABLE IF NOT EXISTS health_data(
+          created_at INTEGER UNIQUE NOT NULL DEFAULT (strftime('%s','now')),
+          ansei INTEGER,
+          hitai INTEGER,
+          karui_heigan INTEGER,
+          tsuyoi_heigan INTEGER,
+          katame INTEGER,
+          biyoku INTEGER,
+          hoho INTEGER,
+          eee INTEGER,
+          kuchibue INTEGER,
+          henoji INTEGER
+        );
+      `);
+      await db.runAsync(`
+        INSERT INTO health_data(
+          ansei,
+          hitai,
+          karui_heigan,
+          tsuyoi_heigan,
+          katame,
+          biyoku,
+          hoho,
+          eee,
+          kuchibue,
+          henoji
+        )
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      `, paramsArray);
+      console.log('INSERT TABLE Success.');
+      if (paramsSum >= 20) {
+        try {
+          const rows = await db.getAllAsync(`
+            SELECT
+              (
+                SELECT
+                COUNT(rowid)
+                FROM
+                  health_data
+                LIMIT
+                  2
+              ) AS has_data,
+              (
+                SELECT
+                COUNT(rowid)
+                FROM
+                  health_data
+                WHERE
+                  ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji >= 40
+                LIMIT
+                  2
+              ) AS has_40,
+              (
+                SELECT
+                COUNT(rowid)
+                FROM
+                  health_data
+                WHERE
+                  ansei + hitai + karui_heigan + tsuyoi_heigan + katame + biyoku + hoho + eee + kuchibue + henoji >= 20
+                LIMIT
+                  2
+              ) AS has_20;
+          `, []);
+          const hasData = rows[0]?.has_data ?? 0;
+          const has40 = rows[0]?.has_40 ?? 0;
+          const has20 = rows[0]?.has_20 ?? 0;
+          console.log(`SELECT TABLE Success. (hasData:${hasData}, has40:${has40}, has20:${has20})`);
+          if (hasData > 1 && has40 <= 1 && paramsSum >= 40) {
+            navigation.navigate('DiagnoseCongratulation', { isFirst: '40' });
+          } else if (hasData > 1 && has20 <= 1 && paramsSum >= 20) {
+            console.log('Is First 20');
+            navigation.navigate('DiagnoseCongratulation', { isFirst: '20' });
+          } else {
+            console.log('Is Else');
+            navigation.popToTop();
+          }
+        } catch (e) {
+          console.error('SELECT TABLE Failed.', e);
+        }
+      } else {
+        console.log('Is Not paramsSum >= 20');
+        navigation.popToTop();
+      }
+    } catch (e) {
+      console.error('saveData Failed.', e);
+      openErrorDialog();
+    }
   };
 
   return (
