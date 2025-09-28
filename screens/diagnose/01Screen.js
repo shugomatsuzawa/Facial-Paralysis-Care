@@ -47,7 +47,7 @@ const Diagnose01Screen = ({ navigation }) => {
           </View>
         ) : isCameraOpen ? (
           <Pressable onPress={pauseCamera}>
-            <CameraView facing="front" isActive={!isPaused} style={styles.camera} />
+            <CameraView facing="front" active={!isPaused} style={styles.camera} />
             <Text style={styles.cameraPauseText}>{isPaused ? '映像をタップして再開' : '映像をタップして一時停止'}</Text>
           </Pressable>
         ) : (
