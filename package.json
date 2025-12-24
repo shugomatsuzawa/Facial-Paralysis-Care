@@ -1,6 +1,6 @@
 {
   "name": "facial-paralysis-care",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.11",
-    "@react-navigation/native": "^6.1.6",
-    "@react-navigation/native-stack": "^6.9.12",
+    "@react-navigation/native": "^7.1.26",
+    "@react-navigation/native-stack": "^7.9.0",
     "expo": "^54.0.0",
     "expo-camera": "~17.0.8",
     "expo-dev-client": "~6.0.12",

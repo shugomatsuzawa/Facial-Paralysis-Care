@@ -46,6 +46,8 @@ export default function App() {
   });
   // console.log(LightTheme.colors);
   // console.log(DarkTheme.colors);
+  // console.log(LightTheme.fonts);
+  // console.log(DarkTheme.fonts);
 
   const customLightColors = {
     "primary": "rgb(0, 102, 137)",
@@ -338,59 +340,88 @@ export default function App() {
     }),
   } : {};
 
-  const theme = Platform.OS === 'ios' && colorScheme === 'dark' ? {
-    ...MD3DarkTheme,
-    ...DarkTheme,
-    // Specify custom property
-    myOwnProperty: true,
-    // Specify custom property in nested object
-    colors: {
-      ...MD3DarkTheme.colors,
-      ...DarkTheme.colors,
-      ...customDarkColors,
-      ...iosColors,
-    },
-  } : Platform.OS === 'ios' ? {
-    ...MD3LightTheme,
-    ...LightTheme,
-    // Specify custom property
-    myOwnProperty: true,
-    // Specify custom property in nested object
-    colors: {
-      ...MD3LightTheme.colors,
-      ...LightTheme.colors,
-      ...customLightColors,
-      ...iosColors,
-    },
-  } : colorScheme === 'dark' ? {
-    ...MD3DarkTheme,
-    ...DarkTheme,
-    // Specify custom property
-    myOwnProperty: true,
-    // Specify custom property in nested object
-    colors: {
-      ...MD3DarkTheme.colors,
-      ...DarkTheme.colors,
-      ...customDarkColors,
-      "dynamic": {
-        ...customDarkColors,
+  let theme = {};
+  switch (true) {
+    case Platform.OS === 'ios' && colorScheme === 'dark':
+      theme = {
+        ...MD3DarkTheme,
+        ...DarkTheme,
+        // Specify custom property
+        myOwnProperty: true,
+        // Specify custom property in nested object
+        colors: {
+          ...MD3DarkTheme.colors,
+          ...DarkTheme.colors,
+          ...customDarkColors,
+          ...iosColors,
+        },
+        fonts: {
+          ...MD3DarkTheme.fonts,
+          ...DarkTheme.fonts,
+        },
+      };
+      break;
+    case Platform.OS === 'ios':
+      theme = {
+        ...MD3LightTheme,
+        ...LightTheme,
+        // Specify custom property
+        myOwnProperty: true,
+        // Specify custom property in nested object
+        colors: {
+          ...MD3LightTheme.colors,
+          ...LightTheme.colors,
+          ...customLightColors,
+          ...iosColors,
+        },
+        fonts: {
+          ...MD3LightTheme.fonts,
+          ...LightTheme.fonts,
+        },
+      };
+      break;
+    case colorScheme === 'dark':
+      theme = {
+        ...MD3DarkTheme,
+        ...DarkTheme,
+        // Specify custom property
+        myOwnProperty: true,
+        // Specify custom property in nested object
+        colors: {
+          ...MD3DarkTheme.colors,
+          ...DarkTheme.colors,
+          ...customDarkColors,
+          "dynamic": {
+            ...customDarkColors,
+          }
+        },
+        fonts: {
+          ...MD3DarkTheme.fonts,
+          ...DarkTheme.fonts,
+        },
+      };
+      break;
+    default:
+      theme = {
+        ...MD3LightTheme,
+        ...LightTheme,
+        // Specify custom property
+        myOwnProperty: true,
+        // Specify custom property in nested object
+        colors: {
+          ...MD3LightTheme.colors,
+          ...LightTheme.colors,
+          ...customLightColors,
+          "dynamic": {
+            ...customLightColors,
+          }
+        },
+        fonts: {
+          ...MD3LightTheme.fonts,
+          ...LightTheme.fonts,
+        },
       }
-    },
-  } : {
-    ...MD3LightTheme,
-    ...LightTheme,
-    // Specify custom property
-    myOwnProperty: true,
-    // Specify custom property in nested object
-    colors: {
-      ...MD3LightTheme.colors,
-      ...LightTheme.colors,
-      ...customLightColors,
-      "dynamic": {
-        ...customLightColors,
-      }
-    },
-  };
+  }
 
   if (Platform.OS === 'android') {
     NavigationBar.setBackgroundColorAsync(theme.colors.background);
