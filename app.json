@@ -8,7 +8,9 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
-    "locales": { "ja": "./languages/ja.json" },
+    "locales": {
+      "ja": "./languages/ja.json"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -27,11 +29,14 @@
         }
       },
       "infoPlist": {
-        "CFBundleLocalizations" : ["ja"],
-        "CFBundleDevelopmentRegion" : "ja",
+        "CFBundleLocalizations": [
+          "ja"
+        ],
+        "CFBundleDevelopmentRegion": "ja",
         "UIRequiredDeviceCapabilities": [
           "front-facing-camera"
-        ]
+        ],
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -42,7 +47,6 @@
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        // "monochromeImage": "./assets/adaptive-icon-monochrome.png",
         "backgroundColor": "#ebf2f8"
       },
       "splash": {
